@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models\Master;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Service extends Model
+{
+    use HasFactory;
+    protected $fillable = ["outlet_id","category_id","name","price","satuan","icon"];
+
+    public function outlet()
+    {
+        return $this->belongsTo('App\Models\Outlets\Outlet');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Master\Category');
+    }
+}

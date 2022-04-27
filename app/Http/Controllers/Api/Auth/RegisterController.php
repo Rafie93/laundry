@@ -5,62 +5,77 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Register;
 use App\Models\User;
+use App\Models\Users\UserManajemen;
+use App\Models\Outlets\Outlet;
+use App\Models\Outlets\Merchant;
+
 class RegisterController extends Controller
 {
-    public function phone(Request $request)
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'fullname' => 'required',
             'phone'   => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'outletname' => 'required',
+            'outletphone' => 'required',
+            'outletemail' => 'required',
+            'outletaddress' => 'required',
+            'longitude' => 'required',
+            'latitude' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(array("errors"=>validationErrors($validator->errors())), 422);
         }
-        $otp = generateOTP();
+     
         $request->merge([
-            'otp' => $otp,
+            'status' => 1,
+            'role' => 2,
+            'password' => bcrypt($request->password)
+        ]);
+
+        $users = User::create($request->all());
+        $userId = $users->id;
+
+        $merchants = Merchant::create([
+            'name' => $request->fullname,
+            'phone' => $request->phone,
+            'owner_id' => $userId,
+            'package_member_id' => 1,
+            'status' => 1,
+            'expired' => \Carbon\Carbon::now()->addDays(15),
             'created_at' => \Carbon\Carbon::now(),
             'updated_at' => \Carbon\Carbon::now(),
         ]);
-        Register::updateOrInsert([
-            'phone' => $request->phone
-        ],$request->all());
-        $message = "JANGAN BERIKAN kode OTP ini ke SIAPAPUN termasuk pihak cs. \nOTP anda: ".$otp;
-        nascondimiSendMessage($request->phone,$message);
-        return response()->json(['success'=>true,'message'=>'Kami Mengirimkan kode OTP ke no whatshapp anda, mohon Verifikasi'], 200);
-    }
-    public function verification(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required',
-            'otp'   => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(array("errors"=>validationErrors($validator->errors())), 422);
-        }
-        $valid = Register::where('phone',$request->phone)
-                    ->where('otp',$request->otp)
-                    ->get();
-        if ($valid->count() == 1) {
-            $register = $valid->first();
-            User::create([
-                'phone' => $request->phone,
-                'fullname' => '-',
-                'email' => '@gmail.com',
-                'status' => 1,
-                'role' => 15,
-                'password' => bcrypt($request->phone),
-                'created_at' => \Carbon\Carbon::now(),
-            ]);
-            $register->update([
-                'otp' => null
-            ]);
-            return response()->json(['success'=>true,'message'=>'Registrasi Sukses, Silahkan lengkapi profil akun anda'], 200);
-        }else{
-            return response()->json(array("errors"=>array("attribute"=>"otp","message"=>"OTP Salah")), 422);
-        }
-    }
 
+        $outlets = Outlet::create([
+            'merchant_id' => $merchants->id,
+            'code' => $request->code,
+            'name' => $request->outletname,
+            'phone' => $request->outletphone,
+            'email' => $request->outletemail,
+            'address' => $request->outletaddress,
+            'city_id' => $request->cityid,
+            'district_id' => $request->districtid,
+            'latitude' => $request->latitude,
+            'longitude'=> $request->longitude,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
+        ]);
+
+        UserManajemen::create([
+            'user_id' => $userId,
+            'role' => 2,
+            'status' => 1,
+            'outlet_id' => $outlets->id,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
+        ]);
+        
+        return response()->json(['success'=>true,'message'=>'Silahkan Login Kembali'], 200);
+    }
+    
 
 }

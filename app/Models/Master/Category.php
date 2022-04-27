@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
     protected $table = "category";
-    protected $fillable = ["outlet_id","name"];
+    protected $fillable = ["outlet_id","name","deleted"];
 
     public function outlet()
     {

@@ -68,32 +68,30 @@
                                     <div class="form-group @error('role') has-error @enderror">
                                         <label class="form-label">Role</label>
                                         	<select name="role" id="role" class="form-control" required onchange="afterRole()">
-                                                @if (Auth::user()->role==11)
-                                                    <option value="11" {{$data->role==11 ? 'selected' : ''}}>Super Admin</option>                                                    
+                                                @if (Auth::user()->role==1)
+                                                    <option value="1" {{$data->role==1 ? 'selected' : ''}}>Super Admin</option>                                                    
                                                 @endif
-                                                <option value="12" {{$data->role==12 ? 'selected' : ''}}>Admin Store</option>
-                                                <option value="13" {{$data->role==13 ? 'selected' : ''}}>CS Store</option>
-                                                <option value="14" {{$data->role==14 ? 'selected' : ''}}>Kasir Store</option>
-                                                <option value="16" {{$data->role==16 ? 'selected' : ''}}>Kurir</option>
+                                                <option value="2" {{$data->role==2 ? 'selected' : ''}}>Owner Outlet</option>
+                                                <option value="3" {{$data->role==3 ? 'selected' : ''}}>Admin Outlet</option>
+                                                <option value="4" {{$data->role==4 ? 'selected' : ''}}>Kasir Outlet</option>
                                             </select>
                                     </div>
-                                    @if (Auth::user()->IN_STORE())
-                                        {!! Form::hidden('store_id', Auth::user()->store_id) !!}
-                                    @else
-                                        <div id="store_for" class="mb-3">
-                                            <label class="form-label">Store For</label>
-                                                <select name="store_id" class="form-control" >
-                                                    <option value="">--Pilih Store--</option>
-                                                    @foreach ($stores as $st)
+                                   
+                                    @if (!Auth::user()->isSuperAdmin())
+                                    <div id="store_for" class="mb-3">
+                                        <label class="form-label">Outlet For</label>
+                                            <select name="outlet_id" class="form-control" required>
+                                                <option value="">--Pilih Store--</option>
+                                                @foreach ($stores as $st)
                                                         @if ($st->id == $data->store_id)
-                                                             <option  selected value="{{$st->id}}">{{$st->name}}</option>
-                                                        @else 
-                                                            <option value="{{$st->id}}">{{$st->name}}</option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                      </div> 
-                                    @endif
+                                                        <option  selected value="{{$st->id}}">{{$st->name}}</option>
+                                                @else 
+                                                    <option value="{{$st->id}}">{{$st->name}}</option>
+                                                @endif
+                                                @endforeach
+                                            </select>
+                                        </div> 
+                                     @endif
                                      <div class="form-group @error('gender') has-error @enderror">
                                         <label class="form-label">Gender </label>
                                         <label class="form-check form-check-inline">

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use App\Models\Users\UserManajemen;
 
 class User extends Authenticatable
 {
@@ -18,7 +19,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'code',
         'fullname',
         'email',
         'password',
@@ -28,7 +28,8 @@ class User extends Authenticatable
         'phone',
         'status',
         'gender',
-        'point'
+        'point',
+        'role'
     ];
 
     /**
@@ -50,9 +51,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    function isSuperAdmin()
+    {
+        return $this->role == 1;
+    }
+
+    public function outlet_id()
+    {
+        $userId = $this->id;
+        $manajemen = UserManajemen::orderBy('id','desc')
+                        ->where('user_id',$userId)->where('status',1)
+                        ->first();
+    
+        if ($manajemen) {
+            return $manajemen->outlet_id;
+        }else{
+            return null;
+        }
+
+    }
+
     function IN_STORE()
     {
-        $store = array(12,13,14,16);
+        $store = array(2,3,4);
 
         if(in_array($this->role,$store)){
             return true;
@@ -61,25 +82,25 @@ class User extends Authenticatable
     }
     public function IS_ROLE()
     {
-        $role = "CUSTOMER";
+        $role = "";
         switch ($this->role) {
-            case 11:
+            case 1:
                 $role ="SUPER ADMIN";
                 break;
-            case 12:
-                $role ="ADMIN STORE";
+            case 2:
+                $role ="OWNER OUTLET";
                 break;
-            case 13:
-                $role ="CS STORE";
+            case 3:
+                $role ="ADMIN OUTLET";
                 break;
-            case 14:
-                $role ="KASIR";
+            case 4:
+                $role ="KASIR OUTLET";
                 break;
-            case 16:
-                $role ="KURIR";
-                break;
+            case 5:
+                    $role ="CUSTOMER";
+                    break;
             default:
-                $role = "CUSTOMER";
+                $role = "";
                 break;
         }
 
@@ -95,18 +116,11 @@ class User extends Authenticatable
             return "Tidak Aktif";
         }
     }
-    public function IS_GENDER()
-    {
-        if ($this->gender=="LK") {
-           return "Laki-Laki";
-        }else{
-            return "Perempuan";
-        }
-    }
+   
     
     public function IS_CMS_LOGIN()
     {
-        $login = array(11,12,13,14,16);
+        $login = array(2,3);
         if(in_array($this->role,$login)){
             return true;
         }

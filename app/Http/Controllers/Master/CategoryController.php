@@ -10,11 +10,15 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-         $categorys = Category::orderBy('id','desc')->whereNull('outlet_id')->paginate(20);
-            $categorys = Category::orderBy('id','desc')
-                        ->where('outlet_id',auth()->user()->outlet_id)
-                        ->paginate(10);
-        
+        $categorys = Category::orderBy('id','desc')
+                        ->where(function ($query) {
+                            if (auth()->user()->isSuperAdmin() ){
+                                $query->whereNull('outlet_id');
+                            }else{
+                                $query->where('outlet_id','=', auth()->user()->outlet_id());
+                            }
+                        })->paginate(10);
+
 
         return view('categorys.index',compact('categorys'));
     }
@@ -34,7 +38,13 @@ class CategoryController extends Controller
         $this->validate($request,[
             'name' => 'required',
         ]);
-     
+
+        if (!auth()->user()->isSuperAdmin() ){
+           $request->merge([
+            'outlet_id' => auth()->user()->outlet_id(),
+           ]);
+        }
+
 
         Category::create($request->all());
         return redirect()->route('category')->with('message','Kategori Baru Berhasil ditambahkan');

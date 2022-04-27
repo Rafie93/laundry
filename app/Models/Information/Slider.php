@@ -13,7 +13,7 @@ class Slider extends Model
 
     public function file()
     {
-        return $this->slide==null ? 'Tidak Ada Image' : asset('images/banner/'.$this->file);
+        return $this->file==null ? 'Tidak Ada Image' : asset('images/slider/'.$this->file);
     }
 
 }

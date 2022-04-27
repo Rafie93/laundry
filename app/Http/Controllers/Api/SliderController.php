@@ -12,18 +12,9 @@ class SliderController extends Controller
     public function index(Request $request)
     {
        $slider = Slider::orderBy('id','desc')
-                    ->whereNull('store_id')
-                    ->paginate(8);
+                    ->get();
 
        return new ListResource($slider);
     }
 
-     public function store(Request $request,$id)
-    {
-       $slider = Slider::orderBy('id','desc')
-                    ->where('store_id',$id)
-                    ->paginate(10);
-
-       return new ListResource($slider);
-    }
 }

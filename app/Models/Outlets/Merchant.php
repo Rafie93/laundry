@@ -10,4 +10,8 @@ class Merchant extends Model
     use HasFactory;
     protected $table = "merchant";
     protected $fillable = ["name","phone","owner_id","package_member_id","expired","status"];
+    public function package()
+    {
+        return $this->belongsTo('App\Models\Sistem\PackageMember','package_member_id');
+    }
 }

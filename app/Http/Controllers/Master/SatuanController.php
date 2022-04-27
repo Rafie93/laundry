@@ -10,12 +10,16 @@ class SatuanController extends Controller
 {
     public function index(Request $request)
     {
-         $satuans = Satuan::orderBy('id','desc')->whereNull('outlet_id')->paginate(20);
-            $satuans = Satuan::orderBy('id','desc')
-                        ->where('outlet_id',auth()->user()->outlet_id)
-                        ->paginate(10);
+        $satuans = Satuan::orderBy('id','desc')
+                            ->where(function ($query) {
+                                if (auth()->user()->isSuperAdmin() ){
+                                    $query->whereNull('outlet_id');
+                                }else{
+                                    $query->where('outlet_id','=', auth()->user()->outlet_id());
+                                }
+                            })                        
+                            ->paginate(10);
         
-
         return view('satuans.index',compact('satuans'));
     }
 
@@ -34,8 +38,13 @@ class SatuanController extends Controller
         $this->validate($request,[
             'name' => 'required',
         ]);
-     
 
+        if (!auth()->user()->isSuperAdmin() ){
+            $request->merge([
+             'outlet_id' => auth()->user()->outlet_id(),
+            ]);
+         }
+    
         Satuan::create($request->all());
         return redirect()->route('satuan')->with('message','Satuan Baru Berhasil ditambahkan');
     }

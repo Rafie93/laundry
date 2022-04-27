@@ -13,11 +13,7 @@ class SliderController extends Controller
     {
         $sliders = Slider::orderBy('id','desc')
                         ->paginate(10);
-        if (auth()->user()->IN_STORE()) {
-            $sliders = Slider::orderBy('id','desc')
-                        ->where('store_id',auth()->user()->store_id)
-                        ->paginate(10);
-        }
+       
         return view('slider.index',compact('sliders'));
     }
 
@@ -36,20 +32,18 @@ class SliderController extends Controller
     {        
         $this->validate($request,[
             'title' => 'required',
-            'slide' => 'required'
+            'file' => 'required'
         ]);
-        if(auth()->user()->role!=11){
-            $request->merge(['store_id'=>auth()->user()->store_id]);
-        }
+        
 
         $slider = Slider::create($request->all());
-         if ($request->hasFile('slide')) {
-            $originName = $request->file('slide')->getClientOriginalName();
+         if ($request->hasFile('file')) {
+            $originName = $request->file('file')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
-            $extension = $request->file('slide')->getClientOriginalExtension();
+            $extension = $request->file('file')->getClientOriginalExtension();
             $fileName = $fileName.'_'.time().'.'.$extension;
-            $request->file('slide')->move('images/slider/',$fileName);
-            $slider->slide = $fileName;
+            $request->file('file')->move('images/slider/',$fileName);
+            $slider->file = $fileName;
             $slider->save();
        }
         return redirect()->route('slider')->with('message','Slider Baru Berhasil ditambahkan');
@@ -71,7 +65,7 @@ class SliderController extends Controller
             $extension = $request->file('file')->getClientOriginalExtension();
             $fileName = $fileName.'_'.time().'.'.$extension;
             $request->file('file')->move('images/slider/',$fileName);
-            $slider->slide = $fileName;
+            $slider->file = $fileName;
             $slider->save();
        }
         return redirect()->route('slider')->with('message','Slider Baru Berhasil ditambahkan');

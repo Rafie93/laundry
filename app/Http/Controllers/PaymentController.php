@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Sales\Sale;
-use App\Models\Sales\SalesDetail;
-use App\Models\Sales\Payment;
+use App\Models\Subscribe\Subscribe;
+use App\Models\Subscribe\Payment;
+use App\Models\Sistem\PackageMember;
+use App\Models\Outlets\Merchant;
+
 class PaymentController extends Controller
 {
 
@@ -24,7 +26,7 @@ class PaymentController extends Controller
 		$statusCode = null;
 
 		$paymentNotification = new \Midtrans\Notification();
-		$order = Sale::where('number', $paymentNotification->order_id)->firstOrFail();
+		$order = Subscribe::where('number', $paymentNotification->order_id)->firstOrFail();
 
 		if ($order->isPaid()) {
 			return response(['message' => 'The order has been paid before'], 422);
@@ -95,47 +97,30 @@ class PaymentController extends Controller
 						$order->payment_status = 'paid';
 						$order->status = 2;
 						$order->save();
-						//
-						$firebase = $this->initFirebase();
-						$sale = Sale::where('id', $order->id)->first();
-						if ($order->type_sales != 3) {
-							$salesDetail = SalesDetail::where('sale_id',$order->id)->get();
-							$menu_product_name ="";
-							foreach ($salesDetail as $detail) {
-								$menu_product_name .= $detail->qty." x ".$detail->products->name."\n";
+
+						$package_member_id = $order->package_member_id;
+						$merchant_id = $order->merchant_id;
+						$package_member = PackageMember::find($package_member_id);
+						if ($package_member) {
+							$durasi = $package_member->duration;
+							$durasi_day = $package_member->duration_day;
+							if ($duration_day=="day") {
+								Merchant::where('id', $merchant_id)
+										->update([
+											'expired' => \Carbon\Carbon::now()->addDays($durasi)
+										]);
+							}else if ($duration_day=="month") {
+								Merchant::where('id', $merchant_id)
+										->update([
+										'expired' => \Carbon\Carbon::now()->addMonth($durasi)
+								]);
+							}else if ($duration_day=="year") {
+								Merchant::where('id', $merchant_id)
+										->update([
+										'expired' => \Carbon\Carbon::now()->addYear($durasi)
+								]);
 							}
-							$postData = [
-								"id" =>$order->id,
-								"store_name" => $order->stores->name,
-								"number" =>$order->number,
-								"customer_id" => $order->member_id,
-								"customer_name" => $order->member->fullname,
-								"date" =>  $order->created_at->format('D, d M Y : H:i:s'),
-								"grand_total" => $order->grand_total,
-								"menu_name" => $menu_product_name,
-								"service"=> $order->service,
-								"status"=> 'Prepare Order',
-								"payment_status" => $order->payment_status,
-								"payment_method" => $order->payment_method
-							];
-							$updates = ['orders/store-'.$sale->store_id.'/'.$sale->firebase_id => $postData];
-							$firebase->getReference()->update($updates);
 						}
-						$title = "Transaction ".$sale->number." (PAID)";
-						$body  = $title." ".$sale->member->fullname." Baru Saja Melakukan Pembayaran via ".$sale->payment_method." Sebesar Rp ".number_format($order->grand_total);
-						sendFirebaseToAdminStore($sale->store_id,$title,$body);
-						$notifFirebaseData = [
-							"title" => $title,
-							"body" => $body,
-							"from" => $sale->member_id,
-							"to" => $sale->store_id,
-							"code" => $sale->number,
-							"type" => "sales",
-							"is_read" => "belum",
-							"time" => $sale->updated_at
-						];
-						$firebase->getReference('notification/store-'.$sale->store_id)->push($notifFirebaseData);
-						
 					}
 				}
 			);
@@ -144,33 +129,7 @@ class PaymentController extends Controller
 		if ($paymentStatus == PAYMENT::EXPIRE || $paymentStatus == PAYMENT::CANCEL ) {
 			$order->payment_status = 'unpaid';
 			$order->status = 6;
-			$order->save();
-			//
-			if ($order->type_sales != 3) {
-				$sale = Sale::where('id', $order->id)->first();
-				$salesDetail = SalesDetail::where('sale_id',$order->id)->get();
-				$menu_product_name ="";
-				foreach ($salesDetail as $detail) {
-					$menu_product_name .= $detail->qty." x ".$detail->products->name."\n";
-				}
-				$postData = [
-					"id" =>$order->id,
-					"store_name" => $order->stores->name,
-					"number" =>$order->number,
-					"customer_id" => $order->member_id,
-					"customer_name" => $order->member->fullname,
-					"date" =>  $order->created_at->format('D, d M Y : H:i:s'),
-					"grand_total" => $order->grand_total,
-					"menu_name" => $menu_product_name,
-					"service"=> $order->service,
-					"status"=> 'Canceled',
-					"payment_status" => $order->payment_status,
-					"payment_method" => $order->payment_method
-				];
-				$firebase = $this->initFirebase();
-				$updates = ['orders/store-'.$sale->store_id.'/'.$sale->firebase_id => $postData];
-				$firebase->getReference()->update($updates);
-			}
+			$order->save();			
 		}
 
 		$message = 'Payment status is : '. $paymentStatus;
@@ -193,10 +152,10 @@ class PaymentController extends Controller
 	public function completed(Request $request)
 	{
 		$code = $request->query('order_id');
-		$order = Sale::where('number', $code)->firstOrFail();
+		$order = Subscribe::where('number', $code)->firstOrFail();
 		
 		if ($order->payment_status == Order::UNPAID) {
-			// return redirect('payments/failed?order_id='. $code);
+			return redirect('payments/failed?order_id='. $code);
 		}
 
 		\Session::flash('success', "Thank you for completing the payment process!");
@@ -214,7 +173,7 @@ class PaymentController extends Controller
 	public function unfinish(Request $request)
 	{
 		$code = $request->query('order_id');
-		$order = Order::where('code', $code)->firstOrFail();
+		$order = Subscribe::where('number', $code)->firstOrFail();
 
 		\Session::flash('error', "Sorry, we couldn't process your payment.");
 
@@ -231,7 +190,7 @@ class PaymentController extends Controller
 	public function failed(Request $request)
 	{
 		$code = $request->query('order_id');
-		$order = Order::where('code', $code)->firstOrFail();
+		$order = Subscribe::where('number', $code)->firstOrFail();
 
 		\Session::flash('error', "Sorry, we couldn't process your payment.");
 

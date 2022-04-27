@@ -5,16 +5,12 @@ use App\Models\User;
 function validationErrors($errors)
 {
     $errorList = [];
-    // dd($errors);
-    foreach ($errors->all() as $attribute => $messages) {
-        // dd($messages);
-        $explode = explode(' ',$messages);
+    foreach ($errors->getMessages() as $attribute => $messages) {
         $errorList[] = [
-            'attribute' => $explode[1],
-            'message'   => $messages,
+            'attribute' => $attribute,
+            'message'   => $messages[0],
         ];
     }
-  
 
     return $errorList;
 }

@@ -19,6 +19,8 @@ class User extends JsonResource
             'point'=>  $user->point ? $user->point : 0,
             'level'=>$user->level ? $user->level : 'regular',
             'image'  => '',
+            'role_id'  => $user->role,
+            'role_display'  => $user->IS_ROLE(),
             'fcm_token' => $user->fcm_token ? $user->fcm_token : ''
         ];
         return $userData;
@@ -26,7 +28,7 @@ class User extends JsonResource
 
     public function with($request)
     {
-        if ($request->route()->getName() == 'api.login.mail' || $request->route()->getName() == 'api.login.otp') {
+        if ($request->route()->getName() == 'api.login' || $request->route()->getName() == 'api.login') {
             return ['success' => true, 'token' => $this->resource->createToken('nApp')->accessToken];
         }
         return [];

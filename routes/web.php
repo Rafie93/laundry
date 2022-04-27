@@ -18,6 +18,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Master\SatuanController;
 use App\Http\Controllers\Master\LayananController;
 use App\Http\Controllers\Master\CategoryController;
+use App\Http\Controllers\Sistem\PaketSubscriptionController;
 
 Route::get('/firebase',[HomeController::class, 'firebasetest']);
 
@@ -62,11 +63,17 @@ Route::get('/slider/{id}/delete', [SliderController::class, 'delete']);
 Route::get('/slider/{id}/edit', [SliderController::class, 'edit'])->name('slider.edit');
 Route::post('/slider/{id}/update', [SliderController::class, 'update'])->name('slider.update');
 
-Route::get('/stores', [StoresController::class, 'index'])->name('stores');
-Route::get('/stores/create', [StoresController::class, 'create'])->name('stores.create');
-Route::post('/stores/stores', [StoresController::class, 'store'])->name('stores.store');
-Route::get('/stores/{id}/edit', [StoresController::class, 'edit'])->name('stores.edit');
-Route::post('/stores/{id}/update', [StoresController::class, 'update'])->name('stores.update');
+Route::get('/outlet', [StoresController::class, 'index'])->name('outlet');
+Route::get('/outlet/create', [StoresController::class, 'create'])->name('outlet.create');
+Route::post('/outlet/stores', [StoresController::class, 'store'])->name('outlet.store');
+Route::get('/outlet/{id}/edit', [StoresController::class, 'edit'])->name('outlet.edit');
+Route::post('/outlet/{id}/update', [StoresController::class, 'update'])->name('outlet.update');
+
+Route::get('/paket', [PaketSubscriptionController::class, 'index'])->name('paket');
+Route::get('/paket/create', [PaketSubscriptionController::class, 'create'])->name('paket.create');
+Route::post('/paket/stores', [PaketSubscriptionController::class, 'store'])->name('paket.store');
+Route::get('/paket/{id}/edit', [PaketSubscriptionController::class, 'edit'])->name('paket.edit');
+Route::post('/paket/{id}/update', [PaketSubscriptionController::class, 'update'])->name('paket.update');
 
 Route::get('/category', [CategoryController::class, 'index'])->name('category');
 Route::get('/category/create', [CategoryController::class, 'create'])->name('category.create');

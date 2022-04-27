@@ -5,33 +5,57 @@ namespace App\Http\Controllers\Sistem;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Stores\Store;
+use App\Models\Outlets\Outlet;
+use App\Models\Outlets\Merchant;
+use App\Models\Users\UserManajemen;
+
 class UserController extends Controller
 {
     public function index(Request $request)
     {
         $users = User::orderBy('id','desc')
-                        ->whereIn('role',[11,12,13,14,16])
-                        ->paginate(10);
-        if (auth()->user()->IN_STORE()) {
-            $users = User::orderBy('id','desc')
-                        ->whereIn('role',[12,13,14,16])
-                        ->where('store_id',auth()->user()->store_id)
-                        ->paginate(10);
+                     ->paginate(10);
+        if (!auth()->user()->isSuperAdmin()) {
+            $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+            $merchant_id = $owner->merchant_id;
+            $manajemen = UserManajemen::select('outlet_id')
+                            ->where('user_id',auth()->user()->id)->get()->toArray();
+
+            $users = User::select('users.*')->leftJoin('user_manajemen', function($join) {
+                            $join->on('users.id', '=', 'user_manajemen.user_id');
+                         })
+                         ->whereIn('user_manajemen.outlet_id', [$manajemen])
+                         ->orderBy('id','desc')
+                         ->paginate(10);
         }
+        
         return view('users.index',compact('users'));
     }
 
     public function create(Request $request)
-    {
-       $stores = Store::where('status',1)->get();
+    {           
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+        if ($owner) {
+            $stores = Outlet::where('status',1)
+                        ->where('merchant_id',$owner->id)->get();
+        }else{
+            $stores = Outlet::where('status',1)->get();
+        }
+        
+
        return view('users.create',compact('stores'));
     }
 
     public function edit(Request $request,$id)
     {
-       $stores = Store::where('status',1)->get();
-       $data = User::find($id);
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+        if ($owner) {
+            $stores = Outlet::where('status',1)
+                        ->where('merchant_id',$owner->id)->get();
+        }else{
+            $stores = Outlet::where('status',1)->get();
+        }
+        $data = User::find($id);
        return view('users.edit',compact('stores','data'));
     }
 
@@ -46,11 +70,19 @@ class UserController extends Controller
         ]);
         
         $request->merge(['password'=>bcrypt($request->password)]);
-        if (auth()->user()->role!=11) {
-            $request->merge(['store_id'=>auth()->user()->store_id]);
-        }
+        
 
-        User::create($request->all());
+        $users = User::create($request->all());
+
+        UserManajemen::create([
+            'user_id' => $users->id,
+            'role' => $request->role,
+            'outlet_id' => $request->outlet_id,
+            'status' => 1,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
+        ]);
+
         return redirect()->route('user')->with('message','User Baru Berhasil ditambahkan');
     }
      public function update(Request $request,$id)

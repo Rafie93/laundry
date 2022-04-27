@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\User as UserResource;
 use Illuminate\Support\Facades\Validator;
+Use App\Models\Outlets\Outlet;
+Use App\Models\Users\UserManajemen;
 
 class AccountController extends Controller
 {
@@ -15,6 +17,19 @@ class AccountController extends Controller
         $user = auth()->user();
         return new UserResource($user);
     }
+    public function myOutlet()
+    {
+        $userManajemen = UserManajemen::where('user_id',auth()->user()->id)
+                                ->where('status',1)
+                                ->first();
+        $data = array(
+            'role' => intval($userManajemen->role),
+            'outlet_id' => intval($userManajemen->outlet_id),
+            'outlet_name' => Outlet::where('id',$userManajemen->outlet_id)->first()->name,
+        );
+        return response()->json($data);
+    }
+   
     public function changeProfile(Request $request)
     {
         $user = auth()->user();
@@ -55,5 +70,27 @@ class AccountController extends Controller
             return response()->json(['success'=>true,'message'=>'Profil Berhasil di Perbaharui'], 200);
         }
         
+    }
+    public function switch_outlet(Request $request,$id)
+    {
+       $outlet = Outlet::find($id);
+       $merchant_id = "";
+       if (!$outlet) {
+            return response()->json(['success'=>false,'message'=>'outlet not found'], 400);
+       }else{
+           $merchant_id = $outlet->merchant_id;
+       }
+       $user =  UserManajemen::where('user_id',auth()->user()->id)->first();
+       $outlet_id = $user->outlet_id;
+       $outlet2 = Outlet::find($outlet_id);
+       $merchant_id2 = $outlet2->merchant_id;
+       if ($merchant_id != $merchant_id2) {
+            return response()->json(['success'=>false,'message'=>'outlet not merchant'], 400);
+       }
+       $swith = UserManajemen::where('id',$user->id)->update([
+            'outlet_id'=>$id
+       ]);
+       return response()->json(['success'=>true,'message'=>'Berhaisl di switch'], 200);
+
     }
 }

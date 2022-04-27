@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     use HasFactory;
+    protected $table = "outlet";
     protected $fillable = [
+        'merchant_id',
         'code',
         'email',
         'name',
@@ -24,6 +26,10 @@ class Store extends Model
         'logo',
         'slug'
     ];
+    public function merchant()
+    {
+        return $this->belongsTo('App\Models\Regions\State');
+    }
     public function state()
     {
         return $this->belongsTo('App\Models\Regions\State');

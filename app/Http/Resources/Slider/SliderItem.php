@@ -18,7 +18,7 @@ class SliderItem extends JsonResource
             'id'      => $this->resource->id,
             'title'      => $this->resource->title,
             'description'     => $this->resource->description,
-            'slide'  => $this->resource->slide(),
+            'slide'  => $this->resource->file(),
         ];
     }
 }

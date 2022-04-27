@@ -3,13 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-Use App\Models\Stores\Store;
+Use App\Models\Outlets\Outlet;
+use App\Models\Outlets\Merchant;
+
 class StoresController extends Controller
 {
     
     public function index()
     {
-        $stores = Store::all();
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
+        $stores = Outlet::orderBy('merchant_id','asc')
+                        ->where(function ($query) use ($owner) {
+                            if (auth()->user()->role==2 ){
+                                $query->where('merchant_id',$owner->id);
+                            }
+                        })
+                        ->paginate(10);
         return view('stores.index', compact('stores'));
     }
     
@@ -19,7 +29,7 @@ class StoresController extends Controller
     }
      public function edit($id)
     {
-        $data = Store::find($id);
+        $data = Outlet::find($id);
        return view('stores.edit',compact('data'));
     }
     public function store(Request $request)
@@ -29,7 +39,7 @@ class StoresController extends Controller
             'address'    => 'required',
             'phone'=>'required',
         ]);
-        $store = Store::create($request->all());
+        $store = Outlet::create($request->all());
         if ($request->hasFile('file')) {
             $originName = $request->file('file')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
@@ -48,7 +58,7 @@ class StoresController extends Controller
             'address'    => 'required',
             'phone'=>'required',
         ]);
-        $store = Store::find($id);
+        $store = Outlet::find($id);
         $store->update($request->all());
         if ($request->hasFile('file')) {
             $image_path = public_path().'/images/stores/'.$store->logo;

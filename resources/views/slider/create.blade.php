@@ -41,11 +41,11 @@
                                                 </span>
                                          @enderror
                                     </div>   
-                                    <div class="form-group @error('slide') has-error @enderror">
+                                    <div class="form-group @error('file') has-error @enderror">
                                         <label class="form-label">Slide Image</label>
-									    <input type="file" class="form-control @error('slide') has-error @enderror"
-                                         placeholder="" name="slide" value="{{old('slide')}}">
-                                         @error('slide')
+									    <input type="file" class="form-control @error('file') has-error @enderror"
+                                         placeholder="" name="file" value="{{old('file')}}">
+                                         @error('file')
                                                 <span class="help-block" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

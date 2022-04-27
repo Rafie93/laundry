@@ -94,28 +94,28 @@
                                     <div class="form-group @error('role') has-error @enderror">
                                         <label class="form-label">Role</label>
                                         	<select name="role" id="role" class="form-control" required onchange="afterRole()">
-                                                @if (Auth::user()->role==11)
-                                                    <option value="11">Super Admin</option>                                                    
+                                                @if (Auth::user()->isSuperAdmin())
+                                                    <option value="1">Super Admin</option>     
+                                                @else     
+                                                    <option value="3">Admin Outlet</option>
+                                                    <option value="4">Kasir Outlet</option>
                                                 @endif
-                                                <option value="12">Admin Store</option>
-                                                <option value="13">CS Store</option>
-                                                <option value="14">Kasir Store</option>
-                                                <option value="16">Kurir</option>
+                                                
                                             </select>
                                     </div>
-                                    @if (Auth::user()->IN_STORE())
-                                        {!! Form::hidden('store_id', Auth::user()->store_id) !!}
-                                    @else
+
+                                    @if (!Auth::user()->isSuperAdmin())
                                         <div id="store_for" class="mb-3">
-                                            <label class="form-label">Store For</label>
-                                                <select name="store_id" class="form-control" >
+                                            <label class="form-label">Outlet For</label>
+                                                <select name="outlet_id" class="form-control" required>
                                                     <option value="">--Pilih Store--</option>
                                                     @foreach ($stores as $st)
                                                         <option value="{{$st->id}}">{{$st->name}}</option>
                                                     @endforeach
                                                 </select>
-                                      </div> 
+                                            </div> 
                                     @endif
+                                     
                                      <div class="form-group @error('gender') has-error @enderror">
                                         <label class="form-label">Gender </label>
                                         <label class="form-check form-check-inline">

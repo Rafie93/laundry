@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Outlets\Outlet;
 use App\Models\Outlets\Merchant;
 use App\Models\Users\UserManajemen;
+use App\Models\Sistem\PackageMember;
 
 class UserController extends Controller
 {
@@ -71,17 +72,35 @@ class UserController extends Controller
         
         $request->merge(['password'=>bcrypt($request->password)]);
         
+        if ($request->role==1) {
+            $users = User::create($request->all());
+        }else{
+            if (auth()->user()->role!=2 ){
+                return redirect()->route('user')->with('message','Anda Bukan Owner, Tidak Bisa Menambahkan User');
+            }
+            $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+            if ($owner) {
+               $packageId = $owner->package_member_id;
+               $paket  = PackageMember::where('id',$packageId)->first();
+               $cashier = $paket->cashier == null ? 999999999 : $paket->cashier;
+               $outlet = Outlet::where('merchant_id',$owner->id)->get()->toArray();
+               $count = UserManajemen::whereIn('outlet_id',$outlet)->get()->count();
+               if ($count>=$cashier+1) {
+                    return redirect()->route('user')->with('message','Maksimal Kasir Sebanyak '.$cashier);
+               }
+            }
+            $users = User::create($request->all());
+            UserManajemen::create([
+                'user_id' => $users->id,
+                'role' => $request->role,
+                'outlet_id' => $request->outlet_id,
+                'status' => 1,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now(),
+            ]);
+        }
 
-        $users = User::create($request->all());
-
-        UserManajemen::create([
-            'user_id' => $users->id,
-            'role' => $request->role,
-            'outlet_id' => $request->outlet_id,
-            'status' => 1,
-            'created_at' => \Carbon\Carbon::now(),
-            'updated_at' => \Carbon\Carbon::now(),
-        ]);
+        
 
         return redirect()->route('user')->with('message','User Baru Berhasil ditambahkan');
     }

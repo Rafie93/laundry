@@ -36,7 +36,7 @@ class OutletController extends Controller
         if ($owner) {
            $packageId = $owner->package_member_id;
            $paket  = PackageMember::where('id',$packageId)->first();
-           $branch = $paket->branch;
+           $branch = $paket->branch == null ? 9999999999 : $paket->branch;
            $count = Outlet::where('merchant_id',$owner->id)->count();
            if ($count>=$branch) {
                 return response()->json(['success'=>false,'message'=>'Maksimal Outlet Anda Sebanyak '.$branch], 400);

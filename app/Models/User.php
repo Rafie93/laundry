@@ -55,6 +55,10 @@ class User extends Authenticatable
     {
         return $this->role == 1;
     }
+    function isOwner()
+    {
+        return $this->role == 2;
+    }
 
     public function outlet_id()
     {

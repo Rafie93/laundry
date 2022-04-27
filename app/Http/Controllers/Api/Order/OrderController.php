@@ -54,7 +54,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'number' => 'required|unique.order',
+            'number' => 'required|unique:order',
             'grand_total' => 'required|numeric',
             'services' => 'required|json',
             'customer_id' => 'required',

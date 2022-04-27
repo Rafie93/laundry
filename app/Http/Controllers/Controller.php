@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     protected function initPaymentGateway()
 	{
 		\Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');

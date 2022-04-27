@@ -162,20 +162,3 @@
 
 </div>
 @endsection
-@section('script')
- <script>
-     $(function() {
-       afterRole();
-    });
-     function afterRole(){
-        var role = $("#role").val();
-        if(role!=11 && role!=''){
-            $("#store_for").show();
-        }
-        else{
-            $("#store_id").val('');
-            $("#store_for").hide();
-        }
-     }
- </script>   
-@endsection

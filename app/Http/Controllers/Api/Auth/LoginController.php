@@ -32,7 +32,11 @@ class LoginController extends Controller
         if(Auth::attempt(['phone' => request('phone'),
              'password' => request('password')])){
             $user = Auth::user();
-            return new UserResource($user);
+            if ($user->status==0) {
+                return response()->json(['success'=>false,'message'=>'Akun Tidak Ditemuka'], 400);
+            }else{
+                return new UserResource($user);
+            }
         }
         else{
             $cekUser = User::where('phone',$request->phone)->get()->count();

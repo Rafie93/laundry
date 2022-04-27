@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Subscription\SubscribeController;
 use App\Http\Controllers\Api\Expenditure\ExpenditureCategoryController;
 use App\Http\Controllers\Api\Expenditure\ExpenditureController;
 use App\Http\Controllers\Api\Order\OrderController;
+use App\Http\Controllers\Api\Pegawai\PegawaiController;
 
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function() {
 
@@ -99,6 +100,12 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
         Route::get('order/detail/{id}', [OrderController::class,'detail']);
         Route::post('order/store', [OrderController::class,'store']);
         Route::post('order/update_status_order/{id}', [OrderController::class,'update_status_order']);
+
+        Route::get('pegawai', [PegawaiController::class,'index']);
+        Route::post('pegawai/store', [PegawaiController::class,'store']);
+        Route::post('pegawai/update/{id}', [PegawaiController::class,'update']);
+        Route::get('pegawai/delete/{id}', [PegawaiController::class,'delete']);
+
       
     });
 });

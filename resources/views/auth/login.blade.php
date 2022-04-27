@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laundry 2022 : Login</title>
+    <title>JuraganKasir</title>
 	
 	<!-- ================= Favicon ================== -->
     <!-- Standard -->
@@ -42,9 +42,9 @@
 						
 						<div class="login-form">
 							<div class="login-logo">
-								{{-- <img src="{{asset('cms/img/logo.png')}}" alt="Logo" class="img-fluid rounded-circle" height="120" /> --}}
+								<img src="{{asset('cms/img/logo.png')}}" alt="Logo" class="img-fluid rounded-circle" height="120" />
 							</div>
-							<h4>Welcome Laundry</h4>
+							<h4>Selamat Datang di Juragan Kasir</h4>
 							<form method="POST" action="{{ route('login') }}">
                                 {{ csrf_field() }}
 								<div class="form-group  @error('email') has-error @enderror">

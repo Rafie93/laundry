@@ -19,6 +19,7 @@ use App\Http\Controllers\Master\SatuanController;
 use App\Http\Controllers\Master\LayananController;
 use App\Http\Controllers\Master\CategoryController;
 use App\Http\Controllers\Sistem\PaketSubscriptionController;
+use App\Http\Controllers\Subscription\SubscribeController;
 
 Route::get('/firebase',[HomeController::class, 'firebasetest']);
 
@@ -35,6 +36,7 @@ Auth::routes();
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/purchase', [SubscribeController::class, 'index'])->name('purchase');
 Route::get('/profile', [ProfileController::class, 'index'])->name('myprofile');
 Route::get('/profile/change', [ProfileController::class, 'change'])->name('profile.change');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

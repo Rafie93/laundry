@@ -1,13 +1,13 @@
   <div class="header">
         <div class="pull-left">
                         <div class="logo">
-                {{-- <a href="index.html">
+                <a href="index.html">
                     <img id="logoImg" 
-                    src="{{asset('logo/logooc.png')}}" 
-                    data-logo_big="{{asset('logo/logooc.png')}}"
-                    data-logo_small="{{asset('logo/logooc.png')}}"
+                    src="{{asset('logo/logojk.png')}}" 
+                    data-logo_big="{{asset('logo/logojk.png')}}"
+                    data-logo_small="{{asset('logo/logojk.png')}}"
                     alt="OC" />
-                </a> --}}
+                </a>
             </div>
             <div class="hamburger sidebar-toggle">
                 <span class="ti-menu"></span>
@@ -35,7 +35,6 @@
                     </div>
                 </li>
               
-				<li class="header-icon dib chat-sidebar-icon"><i class="ti-comments"></i></li>
                 <li class="header-icon dib"><img class="avatar-img" src="{{asset('assets/images/avatar/1.jpg')}}" alt="" /> <span class="user-avatar">
                     {{Auth::user()->fullname}}
                     <i class="ti-angle-down f-s-10"></i></span>

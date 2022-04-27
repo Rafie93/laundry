@@ -17,6 +17,11 @@ class Subscribe extends Model
     {
         return $this->belongsTo('App\Models\Sistem\PackageMember','package_member_id');
     }
+	public function merchant()
+    {
+        return $this->belongsTo('App\Models\Outlets\Merchant','merchant_id');
+    }
+
 
     public static function generateCode($type)
 	{

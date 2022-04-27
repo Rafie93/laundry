@@ -14,4 +14,9 @@ class Merchant extends Model
     {
         return $this->belongsTo('App\Models\Sistem\PackageMember','package_member_id');
     }
+
+    public function outlet()
+    {
+        return $this->hasMany('App\Models\Outlets\Outlet', 'merchant_id');
+    }
 }

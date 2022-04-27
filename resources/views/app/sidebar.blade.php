@@ -5,10 +5,10 @@
                     <li class="{{ (request()->segment(1) == 'dashboard' ) ? 'active' : '' }} "><a href="{{Route('dashboard')}}"><i class="ti-home"></i> Dashboard </a> </li>
                     @if (auth()->user()->isSuperAdmin())
                         <li class="{{ (request()->segment(1) == 'slider' ) ? 'active' : '' }} ">
-                            <a href="{{Route('slider')}}"><i class="ti-layout-media-overlay-alt"></i> Slider / Banner </a> </li>
+                            <a href="{{Route('slider')}}"><i class="ti-layout-media-overlay-alt"></i> Slider </a> </li>
 
                         <li class="{{ (request()->segment(1) == 'purchase' ) ? 'active' : '' }} ">
-                                <a href="{{Route('dashboard')}}"><i class="ti-blackboard"></i>Transaksi </a> </li>
+                                <a href="{{Route('purchase')}}"><i class="ti-blackboard"></i>Transaksi Langganan </a> </li>
 
                         <li class="{{ (request()->segment(1) == 'outlet' ) ? 'active' : '' }} ">
                             <a href="{{Route('outlet')}}"><i class="ti-harddrives"></i>Outlet </a> </li>

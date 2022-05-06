@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Order;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\Order\Ordertem as ItemResource;
+use App\Http\Resources\Order\OrderItem as ItemResource;
 
 class OrderList extends ResourceCollection
 {

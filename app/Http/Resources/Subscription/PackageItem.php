@@ -16,7 +16,7 @@ class PackageItem extends JsonResource
     {
         return  [
             'id'      => $this->resource->id,
-            'package' => $this->resource->package,
+            'name' => $this->resource->package,
             "price" => intval($this->resource->price),
             "duration" => intval($this->resource->duration),
             "duration_day" => $this->resource->duration_day,

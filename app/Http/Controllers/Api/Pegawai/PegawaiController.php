@@ -24,7 +24,7 @@ class PegawaiController extends Controller
             $users = User::select('users.*')->leftJoin('user_manajemen', function($join) {
                             $join->on('users.id', '=', 'user_manajemen.user_id');
                          })
-                         ->where('status',1)
+                         ->where('users.status',1)
                          ->whereIn('user_manajemen.outlet_id', [$manajemen])
                          ->orderBy('id','desc')
                          ->get();

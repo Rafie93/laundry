@@ -79,11 +79,11 @@ class OrderController extends Controller
             DB::beginTransaction();
                 $order = Order::create($request->all());
                 $serviceArray = json_decode($request->services, true);
-                $macamService = count($prodserviceArrayukArray);
-                for ($i=0; $i < $macamProduk; $i++) {
-                    $service_id = $produkArray[$i]["service_id"];
-                    $price = $produkArray[$i]['price'];
-                    $qty = $produkArray[$i]['qty'];
+                $macamService = count($serviceArray);
+                for ($i=0; $i < $macamService; $i++) {
+                    $service_id = $serviceArray[$i]["service_id"];
+                    $price = $serviceArray[$i]['price'];
+                    $qty = $serviceArray[$i]['qty'];
 
                     $detail = new \App\Models\Order\OrderDetail;
                     $detail->order_id = $order->id;
@@ -97,7 +97,7 @@ class OrderController extends Controller
             return response()->json([
                 'success'=>true,
                 'message'=>'Pesanan Berhasil Dibuat',
-                'data' => ItemResource($order),
+                'data' =>new ItemResource($order),
             ], 200);
         }catch (\PDOException $e) {
             DB::rollBack();

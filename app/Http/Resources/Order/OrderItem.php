@@ -43,11 +43,11 @@ class OrderItem extends JsonResource
             'remainder' => intval($this->resource->remainder),
             'metode_payment' => $this->resource->metode_payment,
             'status_payment' => intval($this->resource->status_payment),
-            'status_payment_display' => $this->resource->isStatusPayment,
+            'status_payment_display' => $this->resource->isStatusPayment(),
             'status_order' => intval($this->resource->status_order),
-            'status_order_display' => $this->resource->isStatusOrder,
+            'status_order_display' => $this->resource->isStatusOrder(),
             'items' => $this->resource->items,
-            'pembuat' => $this->resource->creator->name,
+            'pembuat' => $this->resource->creator->fullname,
 
         ]; 
     }

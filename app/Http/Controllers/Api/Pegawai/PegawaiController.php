@@ -10,6 +10,7 @@ use App\Models\Outlets\Merchant;
 use App\Models\Users\UserManajemen;
 use App\Http\Resources\User as UserItem;
 use App\Http\Resources\UserList as UserResource;
+use Illuminate\Support\Facades\Validator;
 
 class PegawaiController extends Controller
 {

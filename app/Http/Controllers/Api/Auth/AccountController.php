@@ -40,6 +40,11 @@ class AccountController extends Controller
             'outlet_name' => $outlet->name,
             'hari' => $hari,
             'status' => $status,
+            'owner' => $outlet->merchant->name,
+            'owner_phone' => $outlet->merchant->phone,
+            'paket' => $outlet->merchant->package->package,
+            'duration'=> $outlet->merchant->package->duration,
+            'duration_days' => $outlet->merchant->package->duration_day,
         );
         return response()->json($data);
     }

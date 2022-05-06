@@ -22,10 +22,24 @@ class AccountController extends Controller
         $userManajemen = UserManajemen::where('user_id',auth()->user()->id)
                                 ->where('status',1)
                                 ->first();
+        $outlet = Outlet::where('id',$userManajemen->outlet_id)->first();
+
+        $awal  = date_create($outlet->merchant->expired);
+        $akhir = date_create(); 
+        $diff  = date_diff( $awal, $akhir );
+        if ($akhir > $awal) {
+            $hari = "0 Hari";
+            $status = "Expired";
+        }else{
+            $hari = $diff->days." Hari";
+            $status = "Aktif";
+        }
         $data = array(
             'role' => intval($userManajemen->role),
             'outlet_id' => intval($userManajemen->outlet_id),
-            'outlet_name' => Outlet::where('id',$userManajemen->outlet_id)->first()->name,
+            'outlet_name' => $outlet->name,
+            'hari' => $hari,
+            'status' => $status,
         );
         return response()->json($data);
     }

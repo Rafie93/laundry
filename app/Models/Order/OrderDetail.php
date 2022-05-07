@@ -10,4 +10,9 @@ class OrderDetail extends Model
     use HasFactory;
     protected $table = "order_detail";
     protected $fillable = ["order_id","service_id","qty","price","sub_total"];
+
+    public function service()
+    {
+        return $this->belongsTo('App\Models\Master\Service','service_id');
+    }
 }

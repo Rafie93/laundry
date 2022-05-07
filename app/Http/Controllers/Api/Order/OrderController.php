@@ -17,12 +17,14 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
+        $status = $request->status ? $request->status : 0;
         $user = UserManajemen::where('user_id',auth()->user()->id)
                                         ->where('status',1)
                                         ->first();
                                         
         $data = Order::orderBy('id','desc')
                         ->where('outlet_id',$user->outlet_id)
+                        ->where('status_order',$status)
                         ->where(function ($query) {
                             if (auth()->user()->role == 4 ){
                                 $query->where('creator_id','=', auth()->user()->id);

@@ -14,6 +14,20 @@ class OrderItem extends JsonResource
      */
     public function toArray($request)
     {
+        $detail =  $this->resource->order_detail;
+        $output = array();
+        foreach ($detail as $key => $val) {
+            $output[] = array(
+                'id' => $val->id,
+                'service_id' => $val->service_id,
+                'service_name' => $val->service->name,
+                'service_category' => $val->service->category->name,
+                'qty' => $val->qty,
+                'price' => $val->price,
+                'sub_total' => $val->sub_total,
+            );
+        }
+
         return  [
             'id'      => intval($this->resource->id),
             'outlet_id' => intval($this->resource->outlet_id),
@@ -48,6 +62,7 @@ class OrderItem extends JsonResource
             'status_order_display' => $this->resource->isStatusOrder(),
             'items' => $this->resource->items,
             'pembuat' => $this->resource->creator->fullname,
+            'service' => $output,
 
         ]; 
     }

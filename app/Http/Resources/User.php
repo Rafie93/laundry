@@ -3,12 +3,29 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+Use App\Models\Outlets\Outlet;
+Use App\Models\Users\UserManajemen;
 
 class User extends JsonResource
 {
     public function toArray($request)
     {
         $user = $this->resource;
+        $userManajemen = UserManajemen::where('user_id',$user->id)
+                                ->where('status',1)
+                                ->first();
+        $outlet = Outlet::where('id',$userManajemen->outlet_id)->first();
+
+        $awal  = date_create($outlet->merchant->expired);
+        $akhir = date_create(); 
+        $diff  = date_diff( $awal, $akhir );
+        if ($akhir > $awal) {
+            $hari = "0 Hari";
+            $status = "Expired";
+        }else{
+            $hari = $diff->days." Hari";
+            $status = "Aktif";
+        }
         $userData = [
             'id'        => $user->id,
             'fullname'      => $user->fullname ? $user->fullname : '',
@@ -21,7 +38,9 @@ class User extends JsonResource
             'image'  => '',
             'role_id'  => $user->role,
             'role_display'  => $user->IS_ROLE(),
-            'fcm_token' => $user->fcm_token ? $user->fcm_token : ''
+            'fcm_token' => $user->fcm_token ? $user->fcm_token : '',
+            'hari' => $hari,
+            'status_outlet' => $status,
         ];
         return $userData;
     }

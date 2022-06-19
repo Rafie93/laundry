@@ -23,6 +23,8 @@ use App\Http\Controllers\Api\Expenditure\ExpenditureCategoryController;
 use App\Http\Controllers\Api\Expenditure\ExpenditureController;
 use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Pegawai\PegawaiController;
+use App\Http\Controllers\Api\Dashboard\DashboardController;
+
 
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function() {
 
@@ -41,6 +43,8 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
     Route::get('package', [PackageController::class,'index']);
 
     Route::group(['middleware' => 'auth:api'], function(){
+        Route::get('dashboard', [DashboardController::class,'index']);
+
         Route::get('method', [MethodController::class,'index']);
         Route::post('subscribe/store', [SubscribeController::class,'store']);
         Route::get('subscribe/history', [SubscribeController::class,'history']);

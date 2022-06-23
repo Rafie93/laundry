@@ -21,6 +21,7 @@
 
                         <li class="{{ (request()->segment(1) == 'satuan' ||
                             request()->segment(1) == 'category' || 
+                            request()->segment(1) == 'method' || 
                             request()->segment(1) == 'layanan' ) ? 'active open' : '' }} ">
                             <a class="sidebar-sub-toggle"><i class="ti-briefcase"></i> 
                                 Default Laundry <span class="sidebar-collapse-icon ti-angle-down"></span></a>
@@ -28,6 +29,8 @@
                                 <li class="{{ (request()->segment(1) == 'satuan' ) ? 'active' : '' }}"><a href="{{Route('satuan')}}"><i class="ti-briefcase"></i> Satuan</a></li>
                                 <li class="{{ (request()->segment(1) == 'category' ) ? 'active' : '' }}"><a href="{{Route('category')}}"><i class="ti-layout-grid2"></i> Category</a></li>
                                 <li class="{{ (request()->segment(1) == 'layanan' ) ? 'active' : '' }}"><a href="{{Route('layanan')}}"><i class="ti-package"></i> Layanan</a></li>
+                                <li class="{{ (request()->segment(1) == 'method' ) ? 'active' : '' }}"><a href="{{Route('method')}}"><i class="ti-package"></i> Metode Pembayaran</a></li>
+
                             </ul>
                         </li>
                     @else 
@@ -43,6 +46,7 @@
                                 
                             <li class="{{ (request()->segment(1) == 'satuan' ||
                                 request()->segment(1) == 'category' || 
+                                request()->segment(1) == 'method' || 
                                 request()->segment(1) == 'layanan' ) ? 'active open' : '' }} ">
                                 <a class="sidebar-sub-toggle"><i class="ti-briefcase"></i> 
                                     Master Data <span class="sidebar-collapse-icon ti-angle-down"></span></a>
@@ -50,6 +54,8 @@
                                     <li class="{{ (request()->segment(1) == 'satuan' ) ? 'active' : '' }}"><a href="{{Route('satuan')}}"><i class="ti-briefcase"></i> Satuan</a></li>
                                     <li class="{{ (request()->segment(1) == 'category' ) ? 'active' : '' }}"><a href="{{Route('category')}}"><i class="ti-layout-grid2"></i> Category</a></li>
                                     <li class="{{ (request()->segment(1) == 'layanan' ) ? 'active' : '' }}"><a href="{{Route('layanan')}}"><i class="ti-package"></i> Layanan</a></li>
+                                    <li class="{{ (request()->segment(1) == 'method' ) ? 'active' : '' }}"><a href="{{Route('method')}}"><i class="ti-package"></i> Metode Pembayaran</a></li>
+
                                 </ul>
                             </li>
                         @endif

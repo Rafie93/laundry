@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Master\BarangController;
 use App\Http\Controllers\Api\Master\ParfumeController;
 use App\Http\Controllers\Api\Master\ServiceController;
 use App\Http\Controllers\Api\Master\RakController;
+use App\Http\Controllers\Api\Master\MethodPaymentController;
 use App\Http\Controllers\Api\Subscription\SubscribeController;
 use App\Http\Controllers\Api\Expenditure\ExpenditureCategoryController;
 use App\Http\Controllers\Api\Expenditure\ExpenditureController;
@@ -70,6 +71,11 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
         Route::post('satuan/store', [SatuanController::class,'store']);
         Route::post('satuan/update/{id}', [SatuanController::class,'update']);
         Route::get('satuan/delete/{id}', [SatuanController::class,'delete']);
+
+        Route::get('method', [MethodPaymentController::class,'index']);
+        Route::post('method/store', [MethodPaymentController::class,'store']);
+        Route::post('method/update/{id}', [MethodPaymentController::class,'update']);
+        Route::get('method/delete/{id}', [MethodPaymentController::class,'delete']);
 
         Route::get('rak', [RakController::class,'index']);
         Route::post('rak/store', [RakController::class,'store']);

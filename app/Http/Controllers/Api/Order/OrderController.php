@@ -115,6 +115,11 @@ class OrderController extends Controller
             'date_entry' => Carbon::now(),
 
         ]);
+        if ($request->status_payment==1) {
+            $request->merge([
+                'date_pay' => Carbon::now(),
+            ]);
+        }
         if (!$request->outlet_id) {
             $user = UserManajemen::where('user_id',auth()->user()->id)
                                         ->where('status',1)

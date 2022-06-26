@@ -91,7 +91,7 @@ class MethodPaymentController extends Controller
         }
         return response()->json(['success'=>true,'message'=>'Metode Pembayaran Berhasil diperbaharui'], 200);
     }
-    public function delete(Request $request)
+    public function delete(Request $request,$id)
     {
         $method = MethodPayment::find($id);
         $method->delete();

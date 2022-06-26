@@ -57,7 +57,7 @@ class RakController extends Controller
         return response()->json(['success'=>true,'message'=>'Rak Berhasil diperbaharui'], 200);
     }
     
-    public function delete(Request $request)
+    public function delete(Request $request,$id)
     {
         $items = Rak::find($id);
         $items->delete();

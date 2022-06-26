@@ -55,7 +55,7 @@ class BarangController extends Controller
         $items->update($request->all());
         return response()->json(['success'=>true,'message'=>'Item Berhasil diperbaharui'], 200);
     }
-    public function delete(Request $request)
+    public function delete(Request $request,$id)
     {
         $items = Items::find($id);
         $items->delete();

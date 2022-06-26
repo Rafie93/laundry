@@ -71,7 +71,7 @@ class SatuanController extends Controller
         $satuans->update($request->all());
         return response()->json(['success'=>true,'message'=>'Satuan Berhasil diperbaharui'], 200);
     }
-    public function delete(Request $request)
+    public function delete(Request $request,$id)
     {
         $satuans = Satuan::find($id);
         $satuans->delete();

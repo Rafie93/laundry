@@ -72,7 +72,7 @@ class CategoryController extends Controller
         return response()->json(['success'=>true,'message'=>'Kategori Berhasil diperbaharui'], 200);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request,$id)
     {
         $category = Category::find($id);
         $category->update([

@@ -13,6 +13,7 @@ class Order extends Model
     "number", 
     "customer_id",
     "date_entry", 
+    "date_estimasi",
     "date_process",
     "date_complete", 
     "date_taken", 

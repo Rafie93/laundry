@@ -31,6 +31,8 @@ class ServiceController extends Controller
                 'satuan' => $row->satuan,
                 'category_id' => $row->category_id,
                 'price'=> $row->price,
+                'estimasi'=> $row->estimasi,
+                'estimasi_type'=> $row->estimasi_type,
                 'icon'=>$row->icon
               ]);
            }
@@ -48,6 +50,7 @@ class ServiceController extends Controller
             'name' => 'required',
             'category_id' => 'required',
             'price' => 'required',
+            'estimasi' => 'required',
             'satuan' => 'required',
         ]);
         if ($validator->fails()) {
@@ -69,6 +72,7 @@ class ServiceController extends Controller
             'name' => 'required',
             'category_id' => 'required',
             'price' => 'required',
+            'estimasi' => 'required',
             'satuan' => 'required',
         ]);
         if ($validator->fails()) {
@@ -80,7 +84,7 @@ class ServiceController extends Controller
         return response()->json(['success'=>true,'message'=>'Layanan Berhasil diperbaharui'], 200);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request,$id)
     {
         $service = Service::find($id);
         $service->update([

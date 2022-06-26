@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Api\Order;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order\Order;
+use App\Models\Order\OrderDetail;
+
 Use App\Models\Users\UserManajemen;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Order\OrderList as ListResource;
 use App\Http\Resources\Order\OrderItem as ItemResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Master\Service;
 
 
 class OrderController extends Controller
@@ -21,16 +24,58 @@ class OrderController extends Controller
         $user = UserManajemen::where('user_id',auth()->user()->id)
                                         ->where('status',1)
                                         ->first();
-                                        
-        $data = Order::orderBy('id','desc')
-                        ->where('outlet_id',$user->outlet_id)
-                        ->where('status_order',$status)
-                        ->where(function ($query) {
-                            if (auth()->user()->role == 4 ){
-                                $query->where('creator_id','=', auth()->user()->id);
-                            }
-                        })
-                        ->get();
+        if ($status==0) {
+            $data = Order::orderBy('date_estimasi','asc')
+                            ->where('outlet_id',$user->outlet_id)
+                            ->where('status_order',$status)
+                            ->where(function ($query) {
+                                if (auth()->user()->role == 4 ){
+                                    $query->where('creator_id','=', auth()->user()->id);
+                                }
+                            })
+                            ->get();
+        }else if ($status==1) {
+            $data = Order::orderBy('date_process','asc')
+                            ->where('outlet_id',$user->outlet_id)
+                            ->where('status_order',$status)
+                            ->where(function ($query) {
+                                if (auth()->user()->role == 4 ){
+                                    $query->where('creator_id','=', auth()->user()->id);
+                                }
+                            })
+                            ->get();
+        }else if ($status==2) {
+            $data = Order::orderBy('date_taken','desc')
+                            ->where('outlet_id',$user->outlet_id)
+                            ->where('status_order',$status)
+                            ->where(function ($query) {
+                                if (auth()->user()->role == 4 ){
+                                    $query->where('creator_id','=', auth()->user()->id);
+                                }
+                            })
+                            ->get();
+        }else if ($status==2) {
+            $data = Order::orderBy('date_complete','desc')
+                            ->where('outlet_id',$user->outlet_id)
+                            ->where('status_order',$status)
+                            ->where(function ($query) {
+                                if (auth()->user()->role == 4 ){
+                                    $query->where('creator_id','=', auth()->user()->id);
+                                }
+                            })
+                            ->get();
+        }else{
+            $data = Order::orderBy('id','desc')
+                    ->where('outlet_id',$user->outlet_id)
+                    ->where('status_order',$status)
+                    ->where(function ($query) {
+                        if (auth()->user()->role == 4 ){
+                            $query->where('creator_id','=', auth()->user()->id);
+                        }
+                    })
+            ->get();
+        }
+        
 
         return new ListResource($data);
     }
@@ -95,6 +140,29 @@ class OrderController extends Controller
                     $detail->sub_total =$price* $qty;
                     $detail->save();
                 }
+
+               $det = OrderDetail::where('order_id',$order->id)->get();
+               $sId = 0;
+               foreach ($det as $row) {
+                  $sId = $row->service_id;
+               }
+               $service = Service::find($sId)->first();
+               if ($service) {
+                    $est = $service->estimasi;
+                    $estimasi_type = $service->estimasi_type;
+                    if ($estimasi_type=="Hari") {
+                        $estimasi = Carbon::now()->addDays($est);
+                        Order::find($order->id)->update([
+                            'date_estimasi' => $estimasi
+                        ]);
+                    }else{
+                        $estimasi = Carbon::now()->addHour($est);
+                        Order::find($order->id)->update([
+                            'date_estimasi' => $estimasi
+                        ]);
+                    }
+                }
+                
             DB::commit();
             return response()->json([
                 'success'=>true,

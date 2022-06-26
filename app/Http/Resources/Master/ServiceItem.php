@@ -24,6 +24,8 @@ class ServiceItem extends JsonResource
             'name' => $this->resource->name,
             'price' => intval($this->resource->price),
             'satuan' => $this->resource->satuan,
+            'estimasi' => $this->resource->estimasi,
+            'estimasi_type' => $this->resource->estimasi_type,
             'icon' => $this->resource->icon,
         ]; 
     }

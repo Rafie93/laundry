@@ -36,6 +36,8 @@ class OrderItem extends JsonResource
             'customer_name' => $this->resource->customer->name,
             'customer_phone' => $this->resource->customer->phone,
             'date_entry' => $this->resource->date_entry,
+            'date_estimasi' => $this->resource->date_estimasi,
+            'date_process' => $this->resource->date_process,
             'date_complete' => $this->resource->date_complete,
             'date_taken' => $this->resource->date_taken,
             'date_pay' => $this->resource->date_pay,

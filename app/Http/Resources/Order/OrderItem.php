@@ -22,7 +22,7 @@ class OrderItem extends JsonResource
                 'service_id' => $val->service_id,
                 'service_name' => $val->service->name,
                 'service_category' => $val->service->category->name,
-                'qty' => $val->qty,
+                'qty' => strval($val->qty),
                 'price' => $val->price,
                 'sub_total' => $val->sub_total,
             );

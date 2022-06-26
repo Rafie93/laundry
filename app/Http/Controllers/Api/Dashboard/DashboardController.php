@@ -17,8 +17,7 @@ class DashboardController extends Controller
                 ->first();
         $outlet_id = $user->outlet_id;
 
-        $pendapatan = Order::where('creator_id',auth()->user()->id)
-                            ->whereDate('date_pay',date('Y-m-d'))
+        $pendapatan = Order::whereDate('date_pay',date('Y-m-d'))
                             ->where('status_payment',1)
                             ->sum('grand_total');
         $pengeluaran = Expenditure::where('creator_id',auth()->user()->id)
@@ -27,22 +26,22 @@ class DashboardController extends Controller
 
         $orderIn = Order::where('outlet_id',$outlet_id)
                             ->where('status_order',0)
-                            ->whereDate('date_entry',date('Y-m-d'))
+                            // ->whereDate('date_entry',date('Y-m-d'))
                             ->count();
 
         $orderProses = Order::where('outlet_id',$outlet_id)
                             ->where('status_order',1)
-                            ->whereDate('date_process',date('Y-m-d'))
+                            // ->whereDate('date_process',date('Y-m-d'))
                             ->count();
 
         $orderWait = Order::where('outlet_id',$outlet_id)
                             ->where('status_order',2)
-                            ->whereDate('date_taken',date('Y-m-d'))
+                            // ->whereDate('date_taken',date('Y-m-d'))
                             ->count();
 
         $orderDone = Order::where('outlet_id',$outlet_id)
                             ->where('status_order',3)
-                            ->whereDate('date_complete',date('Y-m-d'))
+                            // ->whereDate('date_complete',date('Y-m-d'))
                             ->count();
 
         return response()->json([

@@ -146,12 +146,9 @@ class OrderController extends Controller
                     $detail->save();
                 }
 
-               $det = OrderDetail::where('order_id',$order->id)->get();
-               $sId = 0;
-               foreach ($det as $row) {
-                  $sId = $row->service_id;
-               }
-               $service = Service::find($sId)->first();
+               $det = OrderDetail::where('order_id',$order->id)->first();
+               $sId = $det->service_id;
+               $service = Service::where('id',$sId)->first();
                if ($service) {
                     $est = $service->estimasi;
                     $estimasi_type = $service->estimasi_type;
@@ -183,6 +180,66 @@ class OrderController extends Controller
             ], 400);
         }
         return response()->json(['success'=>true,'message'=>'Pesanan Laundry Berhasil dibuat'], 200);
+    }
+
+    public function batalkan_order(Request $request,$number)
+    {
+        $user = UserManajemen::where('user_id',auth()->user()->id)
+                         ->where('status',1)
+                        ->first();
+
+        $orderData =  Order::where('number',$number)
+                    ->where('outlet_id',$user->outlet_id)
+                    ->first();
+        if (!$orderData) {
+            return response()->json(['success'=>false,'message'=>'Pesanan tidak ditemukan'], 400);
+        }else{
+            if ($orderData->status_order == 3 || $orderData->status_order == 4) {
+                return response()->json(['success'=>false,'message'=>'Pesanan sudah diselesaikan'], 400);
+            }else{
+                $request->merge([
+                    'status_order' => 4,
+                    'date_canceled' => Carbon::now()
+                ]);
+                Order::where('number',$number)->update($request->all());
+                return response()->json([
+                    'success'=>true,
+                   'message'=>'Pesanan Berhasil dibatalkan'
+               ], 200);
+            }
+        }
+    }
+
+    public function pay_transaction(Request $request,$number)
+    {
+        $validator = Validator::make($request->all(), [
+            'metode_payment' => 'required'
+        ]);
+
+        $user = UserManajemen::where('user_id',auth()->user()->id)
+                         ->where('status',1)
+                        ->first();
+
+        $orderData =  Order::where('number',$number)
+                    ->where('outlet_id',$user->outlet_id)
+                    ->first();
+        if (!$orderData) {
+            return response()->json(['success'=>false,'message'=>'Pesanan tidak ditemukan'], 400);
+        }else{
+            if ($orderData->status_payment == 1) {
+                return response()->json(['success'=>false,'message'=>'Pesanan sudah terbayarkan'], 400);
+            }else{
+                $request->merge([
+                    'status_payment' => 1,
+                    'date_pay' => Carbon::now()
+                ]);
+                Order::where('number',$number)->update($request->all());
+                return response()->json([
+                    'success'=>true,
+                   'message'=>'Pesanan Berhasil dibatalkan'
+               ], 200);
+            }
+        }
     }
 
     public function update_status_order(Request $request,$number)
@@ -227,8 +284,7 @@ class OrderController extends Controller
                 ], 200);
 
             }
-        }
-       
+        }  
     }
     
 }

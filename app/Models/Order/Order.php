@@ -17,6 +17,7 @@ class Order extends Model
     "date_process",
     "date_complete", 
     "date_taken", 
+    "date_canceled",
     "date_pay", 
     "subtotal", 
     "discount", 

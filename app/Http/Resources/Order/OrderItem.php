@@ -40,6 +40,7 @@ class OrderItem extends JsonResource
             'date_process' => $this->resource->date_process,
             'date_complete' => $this->resource->date_complete,
             'date_taken' => $this->resource->date_taken,
+            'date_canceled' => $this->resource->date_canceled,
             'date_pay' => $this->resource->date_pay,
             'subtotal' => intval($this->resource->subtotal),
             'discount' => intval($this->resource->discount),

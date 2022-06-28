@@ -26,7 +26,9 @@ use App\Http\Controllers\Api\Expenditure\ExpenditureController;
 use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Pegawai\PegawaiController;
 use App\Http\Controllers\Api\Dashboard\DashboardController;
-
+use App\Http\Controllers\Api\Voucher\VoucherController;
+use App\Http\Controllers\Api\Report\ReportPendapatanController;
+use App\Http\Controllers\Api\Report\ReportPengeluaranController;
 
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function() {
 
@@ -46,6 +48,12 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
 
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('dashboard', [DashboardController::class,'index']);
+        Route::post('ringkasan', [ReportPendapatanController::class,'ringkasan']);
+        Route::post('pendapatan', [ReportPendapatanController::class,'pendapatan']);
+        Route::post('pengeluaran', [ReportPengeluaranController::class,'pengeluaran']);
+        Route::post('pendapatan/metode', [ReportPendapatanController::class,'metode']);
+        Route::post('pendapatan/layanan', [ReportPendapatanController::class,'layanan']);
+        Route::post('pendapatan/pelanggan', [ReportPendapatanController::class,'pelanggan']);
 
         Route::get('method', [MethodController::class,'index']);
         Route::post('subscribe/store', [SubscribeController::class,'store']);
@@ -66,6 +74,12 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
         Route::post('customer/store', [CustomerController::class,'store']);
         Route::post('customer/update/{id}', [CustomerController::class,'update']);
         Route::get('customer/delete/{id}', [CustomerController::class,'delete']);
+
+        Route::get('voucher', [VoucherController::class,'index']);
+        Route::get('voucher/berlaku', [VoucherController::class,'berlaku']);
+        Route::post('voucher/store', [VoucherController::class,'store']);
+        Route::post('voucher/update/{id}', [VoucherController::class,'update']);
+        Route::get('voucher/delete/{id}', [VoucherController::class,'delete']);
 
         Route::get('satuan', [SatuanController::class,'index']);
         Route::post('satuan/store', [SatuanController::class,'store']);
@@ -117,6 +131,8 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
         Route::get('order/detail/{id}', [OrderController::class,'detail']);
         Route::post('order/store', [OrderController::class,'store']);
         Route::post('order/update_status_order/{id}', [OrderController::class,'update_status_order']);
+        Route::post('order/batalkan_order/{id}', [OrderController::class,'batalkan_order']);
+        Route::post('order/pay_transaction/{id}', [OrderController::class,'pay_transaction']);
 
         Route::get('pegawai', [PegawaiController::class,'index']);
         Route::post('pegawai/store', [PegawaiController::class,'store']);

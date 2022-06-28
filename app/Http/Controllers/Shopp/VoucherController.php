@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Shopp;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Shopp\StoreVoucher;
+use App\Models\Outlets\Promo;
 use Illuminate\Support\Facades\DB;
 
 class VoucherController extends Controller

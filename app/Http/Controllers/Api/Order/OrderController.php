@@ -137,16 +137,26 @@ class OrderController extends Controller
                     $price = $serviceArray[$i]['price'];
                     $qty = $serviceArray[$i]['qty'];
 
+                    $myService = Service::where('id',$service_id)->first();
+                
                     $detail = new \App\Models\Order\OrderDetail;
                     $detail->order_id = $order->id;
                     $detail->service_id = $service_id;
                     $detail->qty = $qty;
                     $detail->price = $price;
                     $detail->sub_total =$price* $qty;
+                    if ($myService) {
+                        $detail->estimasi = $myService->$estimasi;
+                        $detail->estimasi_type = $myService->estimasi_type;
+
+                    }
                     $detail->save();
                 }
 
-               $det = OrderDetail::where('order_id',$order->id)->first();
+               $det = OrderDetail::orderBy('estimasi_type','asc')
+                                    ->orderBy('estimasi','desc')
+                                    ->where('order_id',$order->id)
+                                    ->first();
                $sId = $det->service_id;
                $service = Service::where('id',$sId)->first();
                if ($service) {

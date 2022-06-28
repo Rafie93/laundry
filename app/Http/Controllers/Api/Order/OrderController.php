@@ -155,12 +155,16 @@ class OrderController extends Controller
                     if ($estimasi_type=="Hari") {
                         $estimasi = Carbon::now()->addDays($est);
                         Order::find($order->id)->update([
-                            'date_estimasi' => $estimasi
+                            'date_estimasi' => $estimasi,
+                            'estimated_time' => $est,
+                            'estimated_type' => $estimasi_type
                         ]);
                     }else{
                         $estimasi = Carbon::now()->addHour($est);
                         Order::find($order->id)->update([
-                            'date_estimasi' => $estimasi
+                            'date_estimasi' => $estimasi,
+                            'estimated_time' => $est,
+                            'estimated_type' => $estimasi_type
                         ]);
                     }
                 }

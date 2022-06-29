@@ -4,6 +4,8 @@ namespace App\Http\Resources\Outlet;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
+Use App\Models\Users\UserManajemen;
+
 class OutletItem extends JsonResource
 {
     /**
@@ -25,6 +27,18 @@ class OutletItem extends JsonResource
             $status = "Aktif";
         }
 
+        $manaj = UserManajemen::where('user_id',auth()->user()->id)
+                        ->where('status',1)
+                        ->first();
+
+        $is_switch = true;
+        if ($manaj) {
+            $manaj_id = $manaj_id->outlet_id;
+            if ($manaj_id == $this->resource->id) {
+               $is_switch = false;
+            }
+        }
+
         return  [
             'id'      => intval($this->resource->id),
             'merchant_id' => intval($this->resource->merchant_id),
@@ -38,6 +52,7 @@ class OutletItem extends JsonResource
             'logo' => $this->resource->logo,
             'expired' => $hari,
             'status' => $status,
+            'is_switch' => $is_switch,
         ]; 
     }
 }

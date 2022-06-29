@@ -146,7 +146,7 @@ class OrderController extends Controller
                     $detail->price = $price;
                     $detail->sub_total =$price* $qty;
                     if ($myService) {
-                        $detail->estimasi = $myService->$estimasi;
+                        $detail->estimasi = $myService->estimasi;
                         $detail->estimasi_type = $myService->estimasi_type;
 
                     }

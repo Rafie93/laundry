@@ -67,7 +67,10 @@ class PegawaiController extends Controller
             $outlet = Outlet::where('merchant_id',$owner->id)->get()->toArray();
             $count = UserManajemen::whereIn('outlet_id',$outlet)->get()->count();
             if ($count>=$cashier+1) {
-                return redirect()->route('user')->with('message','Maksimal Kasir Sebanyak '.$cashier);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Maksimal Kasir Sebanyak '.$cashier,
+                ],500); 
             }
         }
         $users = User::create($request->all());

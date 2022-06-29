@@ -95,7 +95,6 @@ class PegawaiController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|min:2',
-            'email'    => 'required|unique:users',
             'phone'=>'required',
             'outlet_id' => 'required',
             'role' => 'required',

@@ -11,6 +11,7 @@ use App\Models\Users\UserManajemen;
 use App\Http\Resources\User as UserItem;
 use App\Http\Resources\UserList as UserResource;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Sistem\PackageMember;
 
 class PegawaiController extends Controller
 {

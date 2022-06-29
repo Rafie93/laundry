@@ -97,14 +97,14 @@ class PegawaiController extends Controller
             'fullname' => 'required|min:2',
             'outlet_id' => 'required',
             'role' => 'required',
-            'password'=>'required|min:8',
-            'repassword'=>'required_with:password|same:password|min:8'
         ]);
         if ($validator->fails()) {
             return response()->json(array("errors"=>validationErrors($validator->errors())), 422);
         }
 
-        $request->merge(['password'=>bcrypt($request->password)]);
+        if ($request->password_change!="") {
+            $request->merge(['password'=>bcrypt($request->password)]);
+        }
         
         $owner = Merchant::where('owner_id',auth()->user()->id)->first();
         if ($owner) {

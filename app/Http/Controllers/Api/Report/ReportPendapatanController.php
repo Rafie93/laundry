@@ -245,7 +245,7 @@ class ReportPendapatanController extends Controller
             $outlet_id = $user->outlet_id;
         }
         
-        $data = Order::select('order.metode_payment',
+        $data = Order::select('order.metode_payment as name',
                                 DB::raw("SUM(order.grand_total) as nominal"))
                                 ->groupBy('order.metode_payment')
                                 ->where('order.outlet_id',$outlet_id)

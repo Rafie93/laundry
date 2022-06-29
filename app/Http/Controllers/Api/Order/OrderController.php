@@ -250,7 +250,7 @@ class OrderController extends Controller
                 Order::where('number',$number)->update($request->all());
                 return response()->json([
                     'success'=>true,
-                   'message'=>'Pesanan Berhasil dibatalkan'
+                   'message'=>'Pesanan Berhasil dibayar'
                ], 200);
             }
         }

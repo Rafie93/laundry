@@ -186,8 +186,8 @@ class OrderController extends Controller
                 $outletName = $orderResponse->outlet->name;
                 $message = "Outlet ".$outletName."\n\nInformasi Transaksi\nNomor Pesanan : "
                 .$orderResponse->number."\nTanggal Masuk : "
-                .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\nInformasi Pembayaran\nStatus Pembayaran : "
-                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\nSalam Juragan Kasir Laundry";
+                .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\n\nInformasi Pembayaran\nStatus Pembayaran : "
+                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\n\nSalam Juragan Kasir Laundry";
 
                 sendMessage($customerPhone,$message);
             }

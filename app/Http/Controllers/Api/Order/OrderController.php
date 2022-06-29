@@ -261,6 +261,19 @@ class OrderController extends Controller
                     'date_pay' => Carbon::now()
                 ]);
                 Order::where('number',$number)->update($request->all());
+                $orderResponse = Order::where('number',$number)->first();
+                if ($orderResponse) {
+                    $customerPhone = $orderResponse->customer->phone;
+                    $outletName = $orderResponse->outlet->name;
+                    $outletPhone = $orderResponse->outlet->phone;
+    
+                    $message = "Outlet :".$outletName."\nTelp : ".$outletPhone."\n\nInformasi Transaksi\nNomor Pesanan : "
+                    .$orderResponse->number."\nTanggal Masuk : "
+                    .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\n\nInformasi Pembayaran\nStatus Pembayaran : "
+                    .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\n\nSalam Juragan Kasir Laundry";
+    
+                    sendMessage($customerPhone,$message);
+                }
                 return response()->json([
                     'success'=>true,
                    'message'=>'Pesanan Berhasil dibayar'

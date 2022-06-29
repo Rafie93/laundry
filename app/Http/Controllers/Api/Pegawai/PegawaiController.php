@@ -103,7 +103,7 @@ class PegawaiController extends Controller
         }
 
         if ($request->password_change!="") {
-            $request->merge(['password'=>bcrypt($request->password)]);
+            $request->merge(['password'=>bcrypt($request->password_change)]);
         }
         
         $owner = Merchant::where('owner_id',auth()->user()->id)->first();

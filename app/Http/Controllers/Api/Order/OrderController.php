@@ -180,10 +180,19 @@ class OrderController extends Controller
                 }
                 
             DB::commit();
+            $orderResponse = Order::where('id',$order->id)->first();
+            if ($orderResponse) {
+                $customerPhone = $orderResponse->customer->phone;
+                $message = "Informasi Transaksi\nNomor Pesanan : ".$orderResponse->number."\nTanggal Masuk : "
+                .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\nInformasi Pembayaran\nStatus Pembayaran : "
+                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total;
+
+                sendMessage($customerPhone,$message);
+            }
             return response()->json([
                 'success'=>true,
                 'message'=>'Pesanan Berhasil Dibuat',
-                'data' =>new ItemResource($order),
+                'data' =>new ItemResource($orderResponse),
             ], 200);
         }catch (\PDOException $e) {
             DB::rollBack();
@@ -286,6 +295,11 @@ class OrderController extends Controller
                      $request->merge([
                          'date_taken' => Carbon::now(),
                      ]);
+                     if ($orderData) {
+                         $customerPhone = $orderData->customer->phone;
+                         $message = "Nomor Pesanan : ".$orderData->number."\nSudah Bisa Diambil Di Outlet";
+                         sendMessage($customerPhone,$message);
+                     }
                  }else if ($request->status_order==3) {
                      $request->merge([
                          'date_complete' => Carbon::now(),

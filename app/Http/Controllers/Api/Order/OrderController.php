@@ -270,7 +270,7 @@ class OrderController extends Controller
                     $message = "Outlet :".$outletName."\nTelp : ".$outletPhone."\n\nInformasi Transaksi\nNomor Pesanan : "
                     .$orderResponse->number."\nTanggal Masuk : "
                     .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\n\nInformasi Pembayaran\nStatus Pembayaran : "
-                    .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\n\nSalam Juragan Kasir Laundry";
+                    .$orderResponse->isStatusPayment()."\nTanggal Bayar : ".$orderResponse->date_pay."\nGrand Total : ".$orderResponse->grand_total."\n\n\nSalam Juragan Kasir Laundry";
     
                     sendMessage($customerPhone,$message);
                 }

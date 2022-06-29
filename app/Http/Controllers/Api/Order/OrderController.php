@@ -183,9 +183,11 @@ class OrderController extends Controller
             $orderResponse = Order::where('id',$order->id)->first();
             if ($orderResponse) {
                 $customerPhone = $orderResponse->customer->phone;
-                $message = "Informasi Transaksi\nNomor Pesanan : ".$orderResponse->number."\nTanggal Masuk : "
+                $outletName = $orderResponse->outlet->name;
+                $message = "Outlet ".$outletName."\n\nInformasi Transaksi\nNomor Pesanan : "
+                .$orderResponse->number."\nTanggal Masuk : "
                 .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\nInformasi Pembayaran\nStatus Pembayaran : "
-                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total;
+                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\nSalam Juragan Kasir Laundry";
 
                 sendMessage($customerPhone,$message);
             }
@@ -297,7 +299,8 @@ class OrderController extends Controller
                      ]);
                      if ($orderData) {
                          $customerPhone = $orderData->customer->phone;
-                         $message = "Nomor Pesanan : ".$orderData->number."\nSudah Bisa Diambil Di Outlet";
+                         $outletName = $orderData->outlet->name;
+                         $message = "Outlet ".$outletName."\n\nNomor Pesanan : ".$orderData->number."\nSudah Bisa Diambil Di Outlet\n\nSalam Juragan Kasir Laundry";
                          sendMessage($customerPhone,$message);
                      }
                  }else if ($request->status_order==3) {

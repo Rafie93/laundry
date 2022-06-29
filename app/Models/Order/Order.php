@@ -81,4 +81,9 @@ class Order extends Model
     {
         return $this->hasMany('App\Models\Order\OrderDetail', 'order_id');
     }
+
+    public function outlet()
+    {
+        return $this->belongsTo('App\Models\Outlets\Outlet');
+    }
 }

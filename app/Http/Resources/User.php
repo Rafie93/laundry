@@ -40,6 +40,7 @@ class User extends JsonResource
             'role_display'  => $user->IS_ROLE(),
             'fcm_token' => $user->fcm_token ? $user->fcm_token : '',
             'hari' => $hari,
+            'outlet_id' => $userManajemen->outlet_id,
             'status_outlet' => $status,
         ];
         return $userData;

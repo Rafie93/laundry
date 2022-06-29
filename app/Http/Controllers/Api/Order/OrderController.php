@@ -184,7 +184,9 @@ class OrderController extends Controller
             if ($orderResponse) {
                 $customerPhone = $orderResponse->customer->phone;
                 $outletName = $orderResponse->outlet->name;
-                $message = "Outlet ".$outletName."\n\nInformasi Transaksi\nNomor Pesanan : "
+                $outletPhone = $orderResponse->outlet->phone;
+
+                $message = "Outlet :".$outletName."\nTelp : ".$outletPhone."\n\nInformasi Transaksi\nNomor Pesanan : "
                 .$orderResponse->number."\nTanggal Masuk : "
                 .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\n\nInformasi Pembayaran\nStatus Pembayaran : "
                 .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\n\nSalam Juragan Kasir Laundry";
@@ -300,7 +302,10 @@ class OrderController extends Controller
                      if ($orderData) {
                          $customerPhone = $orderData->customer->phone;
                          $outletName = $orderData->outlet->name;
-                         $message = "Outlet ".$outletName."\n\nNomor Pesanan : ".$orderData->number."\nSudah Bisa Diambil Di Outlet\n\nSalam Juragan Kasir Laundry";
+                         $outletPhone = $orderData->outlet->phone;
+                         $outletAddress = $orderData->outlet->address;
+
+                         $message = "Outlet : ".$outletName."\nTelp : ".$outletPhone."\n\nNomor Pesanan : ".$orderData->number."\nSudah Bisa Diambil Di Outlet ".$outletName." ".$outletAddress."\n\nSalam Juragan Kasir Laundry";
                          sendMessage($customerPhone,$message);
                      }
                  }else if ($request->status_order==3) {

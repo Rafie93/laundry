@@ -33,7 +33,7 @@ class OutletItem extends JsonResource
 
         $is_switch = true;
         if ($manaj) {
-            $manaj_id = $manaj_id->outlet_id;
+            $manaj_id = $manaj->outlet_id;
             if ($manaj_id == $this->resource->id) {
                $is_switch = false;
             }

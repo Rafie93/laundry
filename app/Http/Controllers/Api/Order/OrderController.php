@@ -113,7 +113,7 @@ class OrderController extends Controller
         $request->merge([
             'creator_id'=>auth()->user()->id,
             'date_entry' => Carbon::now(),
-
+            'notes' => $request->note,
         ]);
         if ($request->status_payment==1) {
             $request->merge([

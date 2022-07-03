@@ -185,11 +185,32 @@ class OrderController extends Controller
                 $customerPhone = $orderResponse->customer->phone;
                 $outletName = $orderResponse->outlet->name;
                 $outletPhone = $orderResponse->outlet->phone;
+                $outletaddress = $orderResponse->outlet->address;
 
-                $message = "Outlet :".$outletName."\nTelp : ".$outletPhone."\n\nInformasi Transaksi\nNomor Pesanan : "
+                $detail = OrderDetail::where('order_id',$order->id)->get();
+                $messageDetail = "\n";
+                foreach ($detail as $det) {
+                    $messageDetail .= $det->service->name;
+                    $messageDetail .= "\n".$det->qty." x ".number_format($det->price)." = ".number_format($det->sub_total);
+                }
+
+                $message = "Outlet :".$outletName
+                ."\nTelp : ".$outletPhone
+                ."\nAlamat : ".$outletaddress
+                ."\n\nInformasi Transaksi\nNomor Pesanan : "
                 .$orderResponse->number."\nTanggal Masuk : "
-                .$orderResponse->date_entry."\nNama Pelanggan : ".$orderResponse->customer->name."\n\nInformasi Pembayaran\nStatus Pembayaran : "
-                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total."\n\n\nSalam Juragan Kasir Laundry";
+                .$orderResponse->date_entry
+                ."\nTanggal Estimasi : ".$orderResponse->date_estimasi
+                ."\nNama Pelanggan : ".$orderResponse->customer->name
+                ."\n\n===================="
+                .$messageDetail
+                ."\n\n===================="
+                ."\n\nInformasi Pembayaran\nStatus Pembayaran : "
+                .$orderResponse->isStatusPayment()."\nGrand Total : ".$orderResponse->grand_total
+                ."\n\nInformasi Lainnya"
+                ."\nNote : ".$orderResponse->notes
+                ."\nParfume : ".$orderResponse->parfume
+                ."\n\n\nSalam Juragan Kasir Laundry";
 
                 sendMessage($customerPhone,$message);
             }

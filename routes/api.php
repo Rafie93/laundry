@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\Voucher\VoucherController;
 use App\Http\Controllers\Api\Report\ReportPendapatanController;
 use App\Http\Controllers\Api\Report\ReportPengeluaranController;
 use App\Http\Controllers\Api\Outlet\ReceiptController;
+use App\Http\Controllers\Api\Pelanggan\RincianPelangganController;
 
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function() {
 
@@ -49,6 +50,11 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
 
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('dashboard', [DashboardController::class,'index']);
+        Route::get('rincian_pelanggan/{id}', [RincianPelangganController::class,'index']);
+        Route::get('rincian_pelanggan/transaksi/{id}', [RincianPelangganController::class,'transaksi']);
+        Route::get('rincian_pelanggan/nominal/{id}', [RincianPelangganController::class,'nominal']);
+        Route::get('rincian_pelanggan/utang/{id}', [RincianPelangganController::class,'utang']);
+
         Route::post('ringkasan', [ReportPendapatanController::class,'ringkasan']);
         Route::post('pendapatan', [ReportPendapatanController::class,'pendapatan']);
         Route::post('pengeluaran', [ReportPengeluaranController::class,'pengeluaran']);

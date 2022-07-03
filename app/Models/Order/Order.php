@@ -39,6 +39,7 @@ class Order extends Model
     "status_payment", 
     "status_order", 
     "items", 
+    "alasan",
     "creator_id"];
 
     public function isStatusPayment()

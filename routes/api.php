@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\Dashboard\DashboardController;
 use App\Http\Controllers\Api\Voucher\VoucherController;
 use App\Http\Controllers\Api\Report\ReportPendapatanController;
 use App\Http\Controllers\Api\Report\ReportPengeluaranController;
+use App\Http\Controllers\Api\Outlet\ReceiptController;
 
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function() {
 
@@ -139,6 +140,8 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
         Route::post('pegawai/update/{id}', [PegawaiController::class,'update']);
         Route::get('pegawai/delete/{id}', [PegawaiController::class,'delete']);
 
-      
+        Route::get('receipt', [ReceiptController::class,'index']);
+        Route::post('receipt/update', [ReceiptController::class,'update']);
+
     });
 });

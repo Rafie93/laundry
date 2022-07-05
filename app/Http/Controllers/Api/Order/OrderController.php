@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order\Order;
 use App\Models\Order\OrderDetail;
-
+use App\Models\Outlets\Merchant;
+use App\Models\Sistem\PackageMember;
+use App\Models\Outlets\Outlet;
 Use App\Models\Users\UserManajemen;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Order\OrderList as ListResource;
@@ -110,6 +112,57 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json(array("errors"=>validationErrors($validator->errors())), 422);
         }
+        $out_id = $request->outlet_id;
+        if (!$request->outlet_id) {
+            $user = UserManajemen::where('user_id',auth()->user()->id)
+                                        ->where('status',1)
+                                        ->first();                            
+           $request->merge(['outlet_id'=>$user->outlet_id]);
+           $out_id = $user->outlet_id;
+        }
+        $merchantId = Outlet::where('id',$out_id)->first()->merchant_id;
+        $owner = Merchant::where('owner_id',$merchantId)->first();
+        $auto_send_wa = "No";
+        if ($owner) {
+            $packageId = $owner->package_member_id;
+            $expired = $owner->$expired;
+            $is_expired = false;
+
+            $paket  = PackageMember::where('id',$packageId)->first();
+            $maks_transaksi = $paket->maks_transaksi == null ? 999999999 : $paket->maks_transaksi;
+            $auto_send_wa = $paket->auto_send_wa;
+
+            $awal  = date_create($expired);
+            $akhir = date_create(); 
+            $diff  = date_diff( $awal, $akhir );
+            if ($akhir > $awal) {
+                $maks_transaksi = 5;
+                $is_expired = true;
+            }
+
+            $outlet = Outlet::where('merchant_id',$owner->id)->get()->toArray();
+            $count = Order::whereIn('outlet_id',$outlet)
+                            ->whereDate('created_at',date('Y-m-d'))
+                            ->get()
+                            ->count();
+
+            if ($is_expired) {
+                if ($count >= $maks_transaksi) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Paket Berlangganan Anda habis, silahkan upgrade untuk melakukan transaksi harian lebih banyak',
+                    ],400); 
+                }
+            }else{
+                if ($count >= $maks_transaksi) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Upgrade Paket Berlangganan Anda, untuk dapat melakukan transaksi harian lebih banyak',
+                    ],400); 
+                }
+            }
+            
+        }
         $request->merge([
             'creator_id'=>auth()->user()->id,
             'date_entry' => Carbon::now(),
@@ -120,12 +173,7 @@ class OrderController extends Controller
                 'date_pay' => Carbon::now(),
             ]);
         }
-        if (!$request->outlet_id) {
-            $user = UserManajemen::where('user_id',auth()->user()->id)
-                                        ->where('status',1)
-                                        ->first();                            
-           $request->merge(['outlet_id'=>$user->outlet_id]);
-        }
+       
         try
         {
             DB::beginTransaction();
@@ -181,7 +229,7 @@ class OrderController extends Controller
                 
             DB::commit();
             $orderResponse = Order::where('id',$order->id)->first();
-            if ($orderResponse) {
+            if ($orderResponse && $auto_send_wa=="Yes") {
                 $customerPhone = $orderResponse->customer->phone;
                 $outletName = $orderResponse->outlet->name;
                 $outletPhone = $orderResponse->outlet->phone;

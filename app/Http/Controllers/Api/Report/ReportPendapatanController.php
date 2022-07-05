@@ -27,6 +27,7 @@ class ReportPendapatanController extends Controller
 
         if ($type=="Keuangan") {
             $lunas = Order::where('status_payment',1)
+                                ->where('status_order','<>',4)
                                 ->where('outlet_id',$outlet_id)
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('date_pay', '>=', "{$request->start}");
@@ -82,15 +83,15 @@ class ReportPendapatanController extends Controller
 
             $pendapatan[] = array(
                 'name' => 'Pendapatan (Lunas)',
-                'nominal' => strval($lunas),
+                'nominal' => strval(number_format($lunas)),
             );
             $pendapatan[] = array(
                 'name' => 'Pendapatan (Pengambilan)',
-                'nominal' => strval($pengambilan),
+                'nominal' => strval(number_format($pengambilan)),
             );
             $pendapatan[] = array(
                 'name' => 'Diskon',
-                'nominal' => strval($diskon),
+                'nominal' => strval(number_format($diskon)),
             );
 
             $output[] = array(
@@ -171,7 +172,7 @@ class ReportPendapatanController extends Controller
 
 
         }else if($type=="Produksi"){
-            $metodeDetail = OrderDetail::select('services.satuan as name',DB::raw(" concat(cast(SUM(order_detail.qty) as char), services.satuan) as nominal"))
+            $metodeDetail = OrderDetail::select('services.satuan as name',DB::raw("SUM(order_detail.qty) as nominal"))
                                 ->groupBy('services.satuan')
                                 ->leftJoin('services', 'services.id', '=', 'order_detail.service_id')
                                 ->leftJoin('order', 'order.id', '=', 'order_detail.order_id')
@@ -184,6 +185,14 @@ class ReportPendapatanController extends Controller
                                     $query->whereDate('order.date_entry', '<=', "{$request->end}");
                                 })
                                 ->get();
+            
+            $mDout=array();
+            foreach ($metodeDetail as $key => $md) {
+                $mDout[] = array(
+                    'name' => $md->name,
+                    'nominal' => number_format($md->nominal)
+                );
+            }
 
             $output[] = array(
                 'category' => 'Produksi',
@@ -215,6 +224,7 @@ class ReportPendapatanController extends Controller
                                 ->leftJoin('customer', 'customer.id', '=', 'order.customer_id')
                                 ->where('order.outlet_id',$outlet_id)
                                 ->where('order.status_payment',1)
+                                ->where('order.status_order','<>',4)
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('order.date_pay', '>=', "{$request->start}");
                                 })
@@ -250,6 +260,7 @@ class ReportPendapatanController extends Controller
                                 ->groupBy('order.metode_payment')
                                 ->where('order.outlet_id',$outlet_id)
                                 ->where('order.status_payment',1)
+                                ->where('order.status_order','<>',4)
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('order.date_pay', '>=', "{$request->start}");
                                 })
@@ -260,6 +271,7 @@ class ReportPendapatanController extends Controller
 
         $tunai = Order::where('outlet_id',$outlet_id)
                         ->where('status_payment',1)
+                        ->where('status_order','<>',4)
                         ->where('metode_payment','Tunai')
                         ->when($request->start, function ($query) use ($request) {
                             $query->whereDate('date_pay', '>=', "{$request->start}");
@@ -275,6 +287,7 @@ class ReportPendapatanController extends Controller
                         ->where('method_payment.type','Transfer')
                         ->where('order.outlet_id',$outlet_id)
                         ->where('order.status_payment',1)
+                        ->where('order.status_order','<>',4)
                         ->when($request->start, function ($query) use ($request) {
                             $query->whereDate('order.date_pay', '>=', "{$request->start}");
                         })
@@ -290,6 +303,7 @@ class ReportPendapatanController extends Controller
                         ->where('method_payment.type','E-Wallet')
                         ->where('order.outlet_id',$outlet_id)
                         ->where('order.status_payment',1)
+                        ->where('order.status_order','<>',4)
                         ->when($request->start, function ($query) use ($request) {
                             $query->whereDate('order.date_pay', '>=', "{$request->start}");
                         })

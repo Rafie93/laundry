@@ -19,6 +19,7 @@ class DashboardController extends Controller
 
         $pendapatan = Order::whereDate('date_pay',date('Y-m-d'))
                             ->where('status_payment',1)
+                            ->where('status_order','<>',4)
                             ->sum('grand_total');
         $pengeluaran = Expenditure::where('creator_id',auth()->user()->id)
                             ->whereDate('date',date('Y-m-d'))

@@ -196,9 +196,10 @@ class ReportPendapatanController extends Controller
             
             $mDout=array();
             foreach ($metodeDetail as $key => $md) {
+                $mNominal = round($md->nominal,2);
                 $mDout[] = array(
                     'name' => $md->name,
-                    'nominal' => number_format($md->nominal,2)
+                    'nominal' => number_format($mNominal)
                 );
             }
 

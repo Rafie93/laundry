@@ -229,7 +229,7 @@ class OrderController extends Controller
                 
             DB::commit();
             $orderResponse = Order::where('id',$order->id)->first();
-            if ($orderResponse && $auto_send_wa=="Yes") {
+            if ($orderResponse) {
                 $customerPhone = $orderResponse->customer->phone;
                 $outletName = $orderResponse->outlet->name;
                 $outletPhone = $orderResponse->outlet->phone;

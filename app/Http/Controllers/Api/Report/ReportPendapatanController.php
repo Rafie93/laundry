@@ -102,10 +102,18 @@ class ReportPendapatanController extends Controller
 
             //PENGELUARAN
 
+            $peng = array();
+            foreach ($pengeluaranDetail as $p) {
+                $peng[] = array(
+                    "name" => $p->name,
+                    "nominal" => number_format($p->nominal)
+                );
+            }
+
             $output[] = array(
                 'category' => 'Pengeluaran',
                 'nominal' => $pengeluaran,
-                'data' => $pengeluaranDetail
+                'data' => $peng
             );
                 
             return response()->json($output);
@@ -190,7 +198,7 @@ class ReportPendapatanController extends Controller
             foreach ($metodeDetail as $key => $md) {
                 $mDout[] = array(
                     'name' => $md->name,
-                    'nominal' => number_format($md->nominal)
+                    'nominal' => number_format($md->nominal,2)
                 );
             }
 

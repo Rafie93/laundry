@@ -125,7 +125,7 @@ class OrderController extends Controller
         $auto_send_wa = "No";
         if ($owner) {
             $packageId = $owner->package_member_id;
-            $expired = $owner->$expired;
+            $expired = $owner->expired;
             $is_expired = false;
 
             $paket  = PackageMember::where('id',$packageId)->first();

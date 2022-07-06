@@ -199,7 +199,7 @@ class ReportPendapatanController extends Controller
                 $mNominal = round($md->nominal,2);
                 $mDout[] = array(
                     'name' => $md->name,
-                    'nominal' => number_format($mNominal)
+                    'nominal' => $mNominal
                 );
             }
 

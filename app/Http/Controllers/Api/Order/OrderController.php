@@ -122,7 +122,7 @@ class OrderController extends Controller
         }
         $merchantId = Outlet::where('id',$out_id)->first()->merchant_id;
         $owner = Merchant::where('id',$merchantId)->first();
-        $auto_send_wa = "No";
+        $auto_send_wa = "Yes";
         if ($owner) {
             $packageId = $owner->package_member_id;
             $expired = $owner->expired;

@@ -206,7 +206,7 @@ class ReportPendapatanController extends Controller
             $output[] = array(
                 'category' => 'Produksi',
                 'nominal' => $metodeDetail->count(),
-                'data' => $metodeDetail
+                'data' => $mDout
             );
                 
             return response()->json($output);

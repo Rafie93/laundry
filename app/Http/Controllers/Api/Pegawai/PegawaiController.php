@@ -64,7 +64,7 @@ class PegawaiController extends Controller
             $packageId = $owner->package_member_id;
             $paket  = PackageMember::where('id',$packageId)->first();
             $cashier = $paket->cashier == null ? 999999999 : $paket->cashier;
-            $outlet = Outlet::where('merchant_id',$owner->id)->get()->toArray();
+            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
             $count = UserManajemen::whereIn('outlet_id',$outlet)->get()->count();
             if ($count>=$cashier+1) {
                 return response()->json([
@@ -111,7 +111,7 @@ class PegawaiController extends Controller
             $packageId = $owner->package_member_id;
             $paket  = PackageMember::where('id',$packageId)->first();
             $cashier = $paket->cashier == null ? 999999999 : $paket->cashier;
-            $outlet = Outlet::where('merchant_id',$owner->id)->get()->toArray();
+            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
             $count = UserManajemen::whereIn('outlet_id',$outlet)->get()->count();
             if ($count>=$cashier+1) {
                 return redirect()->route('user')->with('message','Maksimal Kasir Sebanyak '.$cashier);

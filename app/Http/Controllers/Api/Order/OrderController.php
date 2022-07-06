@@ -140,9 +140,9 @@ class OrderController extends Controller
                 $is_expired = true;
             }
 
-            $outlet = Outlet::where('merchant_id',$owner->id)->get()->toArray();
+            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
             $count = Order::whereIn('outlet_id',$outlet)
-                            ->whereDate('created_at',date('Y-m-d'))
+                            ->whereDate('date_entry',date('Y-m-d'))
                             ->get()
                             ->count();
 

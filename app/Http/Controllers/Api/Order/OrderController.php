@@ -122,7 +122,7 @@ class OrderController extends Controller
         }
         $merchantId = Outlet::where('id',$out_id)->first()->merchant_id;
         $owner = Merchant::where('id',$merchantId)->first();
-        $auto_send_wa = "Yes";
+        $auto_send_wa = "No";
         if ($owner) {
             $packageId = $owner->package_member_id;
             $expired = $owner->expired;
@@ -130,7 +130,7 @@ class OrderController extends Controller
 
             $paket  = PackageMember::where('id',$packageId)->first();
             $maks_transaksi = $paket->maks_transaksi == null ? 999999999 : $paket->maks_transaksi;
-            $auto_send_wa = $paket->auto_send_wa;
+            $auto_send_wa = $paket->auto_send_nota;
 
             $awal  = date_create($expired);
             $akhir = date_create(); 
@@ -229,7 +229,7 @@ class OrderController extends Controller
                 
             DB::commit();
             $orderResponse = Order::where('id',$order->id)->first();
-            if ($orderResponse) {
+            if ($orderResponse && $auto_send_wa=="Yes") {
                 $customerPhone = $orderResponse->customer->phone;
                 $outletName = $orderResponse->outlet->name;
                 $outletPhone = $orderResponse->outlet->phone;

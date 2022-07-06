@@ -121,7 +121,7 @@ class OrderController extends Controller
            $out_id = $user->outlet_id;
         }
         $merchantId = Outlet::where('id',$out_id)->first()->merchant_id;
-        $owner = Merchant::where('owner_id',$merchantId)->first();
+        $owner = Merchant::where('id',$merchantId)->first();
         $auto_send_wa = "No";
         if ($owner) {
             $packageId = $owner->package_member_id;

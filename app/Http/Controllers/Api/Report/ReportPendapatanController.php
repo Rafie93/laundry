@@ -186,7 +186,19 @@ class ReportPendapatanController extends Controller
 
         }else if($type=="Transaksi"){
             $masuk = Order::whereIn('status_order',[0,1,2])
-                            ->where('outlet_id',$outlet_id)
+                            ->where(function ($query) use ($owner,$request,$outlet_id) {
+                                if (auth()->user()->role==2 ){
+                                    if ($request->outlet_id=="") {
+                                        $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                        $query->whereIn('outlet_id',$outlet);
+                                    }else{
+                                        $query->where('outlet_id',$outlet_id);
+                                    }
+                                    
+                                }else{
+                                    $query->where('outlet_id',$outlet_id);
+                                }
+                            })
                             ->when($request->start, function ($query) use ($request) {
                                 $query->whereDate('date_entry', '>=', "{$request->start}");
                             })
@@ -196,7 +208,19 @@ class ReportPendapatanController extends Controller
                             ->count();
 
             $batal = Order::where('status_order',4)
-                    ->where('outlet_id',$outlet_id)
+                    ->where(function ($query) use ($owner,$request,$outlet_id) {
+                        if (auth()->user()->role==2 ){
+                            if ($request->outlet_id=="") {
+                                $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                $query->whereIn('outlet_id',$outlet);
+                            }else{
+                                $query->where('outlet_id',$outlet_id);
+                            }
+                            
+                        }else{
+                            $query->where('outlet_id',$outlet_id);
+                        }
+                    })
                     ->when($request->start, function ($query) use ($request) {
                         $query->whereDate('date_entry', '>=', "{$request->start}");
                     })
@@ -208,7 +232,19 @@ class ReportPendapatanController extends Controller
 
             $metodeDetail = Order::select('metode_payment as name',DB::raw(" concat(cast(count(*) as char), ' transaksi') as nominal"))
                     ->groupBy('metode_payment')
-                    ->where('outlet_id',$outlet_id)
+                    ->where(function ($query) use ($owner,$request,$outlet_id) {
+                        if (auth()->user()->role==2 ){
+                            if ($request->outlet_id=="") {
+                                $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                $query->whereIn('outlet_id',$outlet);
+                            }else{
+                                $query->where('outlet_id',$outlet_id);
+                            }
+                            
+                        }else{
+                            $query->where('outlet_id',$outlet_id);
+                        }
+                    })
                     ->when($request->start, function ($query) use ($request) {
                         $query->whereDate('date_pay', '>=', "{$request->start}");
                     })
@@ -250,7 +286,19 @@ class ReportPendapatanController extends Controller
                                 ->groupBy('services.satuan')
                                 ->leftJoin('services', 'services.id', '=', 'order_detail.service_id')
                                 ->leftJoin('order', 'order.id', '=', 'order_detail.order_id')
-                                ->where('order.outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('order.outlet_id',$outlet);
+                                        }else{
+                                            $query->where('order.outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('order.outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->where('order.status_order','<>',4)
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('order.date_entry', '>=', "{$request->start}");
@@ -286,6 +334,8 @@ class ReportPendapatanController extends Controller
         $outlet_id = $request->outlet_id;
         $start = $request->start ? $request->start : date('Y-m-d');
         $end = $request->end ? $request->end : date('Y-m-d');
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
         if (!$request->outlet_id) {
             $user = UserManajemen::where('user_id',auth()->user()->id)
                 ->where('status',1)
@@ -298,6 +348,19 @@ class ReportPendapatanController extends Controller
                                 ->groupBy('order.number','customer.name','order.date_pay')
                                 ->leftJoin('customer', 'customer.id', '=', 'order.customer_id')
                                 ->where('order.outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('order.outlet_id',$outlet);
+                                        }else{
+                                            $query->where('order.outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('order.outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->where('order.status_payment',1)
                                 ->where('order.status_order','<>',4)
                                 ->when($request->start, function ($query) use ($request) {
@@ -323,6 +386,8 @@ class ReportPendapatanController extends Controller
         $outlet_id = $request->outlet_id;
         $start = $request->start ? $request->start : date('Y-m-d');
         $end = $request->end ? $request->end : date('Y-m-d');
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
         if (!$request->outlet_id) {
             $user = UserManajemen::where('user_id',auth()->user()->id)
                 ->where('status',1)
@@ -333,7 +398,19 @@ class ReportPendapatanController extends Controller
         $data = Order::select('order.metode_payment as name',
                                 DB::raw("SUM(order.grand_total) as nominal"))
                                 ->groupBy('order.metode_payment')
-                                ->where('order.outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('order.outlet_id',$outlet);
+                                        }else{
+                                            $query->where('order.outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('order.outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->where('order.status_payment',1)
                                 ->where('order.status_order','<>',4)
                                 ->when($request->start, function ($query) use ($request) {
@@ -344,8 +421,20 @@ class ReportPendapatanController extends Controller
                                 })
                                 ->get();
 
-        $tunai = Order::where('outlet_id',$outlet_id)
-                        ->where('status_payment',1)
+        $tunai = Order::where('status_payment',1)
+                        ->where(function ($query) use ($owner,$request,$outlet_id) {
+                            if (auth()->user()->role==2 ){
+                                if ($request->outlet_id=="") {
+                                    $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                    $query->whereIn('outlet_id',$outlet);
+                                }else{
+                                    $query->where('outlet_id',$outlet_id);
+                                }
+                                
+                            }else{
+                                $query->where('outlet_id',$outlet_id);
+                            }
+                        })
                         ->where('status_order','<>',4)
                         ->where('metode_payment','Tunai')
                         ->when($request->start, function ($query) use ($request) {
@@ -376,8 +465,19 @@ class ReportPendapatanController extends Controller
                         ->leftJoin('method_payment','method_payment.name','=','order.metode_payment')
                         ->where('method_payment.outlet_id',$outlet_id)
                         ->where('method_payment.type','E-Wallet')
-                        ->where('order.outlet_id',$outlet_id)
-                        ->where('order.status_payment',1)
+                        ->where(function ($query) use ($owner,$request,$outlet_id) {
+                            if (auth()->user()->role==2 ){
+                                if ($request->outlet_id=="") {
+                                    $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                    $query->whereIn('order.outlet_id',$outlet);
+                                }else{
+                                    $query->where('order.outlet_id',$outlet_id);
+                                }
+                                
+                            }else{
+                                $query->where('order.outlet_id',$outlet_id);
+                            }
+                        })                        ->where('order.status_payment',1)
                         ->where('order.status_order','<>',4)
                         ->when($request->start, function ($query) use ($request) {
                             $query->whereDate('order.date_pay', '>=', "{$request->start}");
@@ -405,6 +505,8 @@ class ReportPendapatanController extends Controller
         $outlet_id = $request->outlet_id;
         $start = $request->start ? $request->start : date('Y-m-d');
         $end = $request->end ? $request->end : date('Y-m-d');
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
         if (!$request->outlet_id) {
             $user = UserManajemen::where('user_id',auth()->user()->id)
                 ->where('status',1)
@@ -419,8 +521,19 @@ class ReportPendapatanController extends Controller
                             ->groupBy('services.name')
                             ->leftJoin('services', 'services.id', '=', 'order_detail.service_id')
                             ->leftJoin('order', 'order.id', '=', 'order_detail.order_id')
-                            ->where('order.outlet_id',$outlet_id)
-                            ->where('order.status_order','<>',4)
+                            ->where(function ($query) use ($owner,$request,$outlet_id) {
+                                if (auth()->user()->role==2 ){
+                                    if ($request->outlet_id=="") {
+                                        $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                        $query->whereIn('order.outlet_id',$outlet);
+                                    }else{
+                                        $query->where('order.outlet_id',$outlet_id);
+                                    }
+                                    
+                                }else{
+                                    $query->where('order.outlet_id',$outlet_id);
+                                }
+                            })                            ->where('order.status_order','<>',4)
                             ->when($request->start, function ($query) use ($request) {
                                 $query->whereDate('order.date_entry', '>=', "{$request->start}");
                             })
@@ -444,6 +557,8 @@ class ReportPendapatanController extends Controller
         $outlet_id = $request->outlet_id;
         $start = $request->start ? $request->start : date('Y-m-d');
         $end = $request->end ? $request->end : date('Y-m-d');
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
         if (!$request->outlet_id) {
             $user = UserManajemen::where('user_id',auth()->user()->id)
                 ->where('status',1)
@@ -457,8 +572,19 @@ class ReportPendapatanController extends Controller
                             )
                             ->groupBy('customer.name')
                             ->leftJoin('customer', 'customer.id', '=', 'order.customer_id')
-                            ->where('order.outlet_id',$outlet_id)
-                            ->where('order.status_order','<>',4)
+                            ->where(function ($query) use ($owner,$request,$outlet_id) {
+                                if (auth()->user()->role==2 ){
+                                    if ($request->outlet_id=="") {
+                                        $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                        $query->whereIn('order.outlet_id',$outlet);
+                                    }else{
+                                        $query->where('order.outlet_id',$outlet_id);
+                                    }
+                                    
+                                }else{
+                                    $query->where('order.outlet_id',$outlet_id);
+                                }
+                            })                            ->where('order.status_order','<>',4)
                             ->when($request->start, function ($query) use ($request) {
                                 $query->whereDate('order.date_entry', '>=', "{$request->start}");
                             })

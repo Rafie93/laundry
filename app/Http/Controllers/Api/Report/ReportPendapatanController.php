@@ -41,10 +41,10 @@ class ReportPendapatanController extends Controller
                                 ->where('status_order','<>',4)
                                 ->where('outlet_id',$outlet_id)
                                 ->when($request->start, function ($query) use ($request) {
-                                    $query->whereDate('date_pay', '>=', "{$request->start}");
+                                    $query->whereDate('date_entry', '>=', "{$request->start}");
                                 })
                                 ->when($request->end, function ($query) use ($request) {
-                                    $query->whereDate('date_pay', '<=', "{$request->end}");
+                                    $query->whereDate('date_entry', '<=', "{$request->end}");
                                 })
                                 ->sum('grand_total');
 

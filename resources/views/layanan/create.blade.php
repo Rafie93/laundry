@@ -23,7 +23,7 @@
 								<div class="card-body">
 
                                     <div class="form-group @error('category_id') has-error @enderror">
-                                        <label class="form-label">Nama Layanan*</label>
+                                        <label class="form-label">Kategori Layanan*</label>
                                         <select class="form-control @error('category_id') is-invalid @enderror"
                                              name="category_id" required>
                                           <option value="">Pilih Kategori Layanan</option>
@@ -39,7 +39,7 @@
                                     </div> 
 
                                     <div class="form-group @error('name') has-error @enderror">
-                                        <label class="form-label">Nama Layanan*</label>
+                                        <label class="form-label">Nama Varian Layanan*</label>
 									    <input type="text" class="form-control @error('name') is-invalid @enderror"
                                          placeholder="" name="name" required value="{{old('name')}}">
                                          @error('name')
@@ -50,7 +50,7 @@
                                     </div>   
                                     
                                     <div class="form-group @error('price') has-error @enderror">
-                                        <label class="form-label">Harga*</label>
+                                        <label class="form-label">Harga Layanan*</label>
 									    <input type="number" class="form-control @error('price') is-invalid @enderror"
                                          placeholder="" name="price" required value="{{old('price')}}">
                                          @error('price')
@@ -70,6 +70,32 @@
                                           @endforeach
                                         </select>
                                          @error('satuan')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                         @enderror
+                                    </div> 
+
+                                    <div class="form-group @error('estimasi_type') has-error @enderror">
+                                        <label class="form-label">Estimasi Tipe Layanan *<label>
+                                        <select required class="form-control @error('estimasi_type') is-invalid @enderror"
+                                             name="estimasi_type">
+                                             <option value="Hari">Hari</option>
+                                              <option value="Jam">Jam</option>
+                                          
+                                        </select>
+                                         @error('estimasi_type')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                         @enderror
+                                    </div> 
+
+                                    <div class="form-group @error('estimasi') has-error @enderror">
+                                        <label class="form-label">Estimasi Layanan *</label>
+									    <input type="number" class="form-control @error('estimasi') is-invalid @enderror"
+                                         placeholder="" name="estimasi" required value="{{old('estimasi')}}">
+                                         @error('estimasi')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

@@ -37,11 +37,12 @@ class ReportPendapatanController extends Controller
                                 })
                                 ->sum('grand_total');
 
-            $pengambilan = Order::where('status_payment',0)
+            $pengambilan = Order::where('status_payment',1)
                                 ->where('status_order','<>',4)
+                                ->where('remainder','>',0)
                                 ->where('outlet_id',$outlet_id)
                                 ->when($request->start, function ($query) use ($request) {
-                                    $query->whereDate('date_entry', '>=', "{$request->start}");
+                                    $query->whereDate('date_pay', '>=', "{$request->start}");
                                 })
                                 ->when($request->end, function ($query) use ($request) {
                                     $query->whereDate('date_entry', '<=', "{$request->end}");

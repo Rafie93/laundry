@@ -62,7 +62,8 @@ class AccountController extends Controller
         if ($validator->fails()) {
             return response()->json(array("errors"=>validationErrors($validator->errors())), 422);
         }
-        $user->update([
+        $dataUser = User::find($user->id);
+        $dataUser->update([
             "fullname" => $request->fullname,
             'email'=> $request->email,
             'birthday'=>$request->birthday,

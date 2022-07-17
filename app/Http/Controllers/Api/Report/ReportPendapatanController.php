@@ -347,7 +347,6 @@ class ReportPendapatanController extends Controller
                                 DB::raw("SUM(order.grand_total) as nominal"))
                                 ->groupBy('order.number','customer.name','order.date_pay')
                                 ->leftJoin('customer', 'customer.id', '=', 'order.customer_id')
-                                ->where('order.outlet_id',$outlet_id)
                                 ->where(function ($query) use ($owner,$request,$outlet_id) {
                                     if (auth()->user()->role==2 ){
                                         if ($request->outlet_id=="") {

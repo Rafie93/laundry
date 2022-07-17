@@ -31,6 +31,9 @@ class OrderItem extends JsonResource
         return  [
             'id'      => intval($this->resource->id),
             'outlet_id' => intval($this->resource->outlet_id),
+            'outlet_name' => $this->resource->outlet->name,
+            'outlet_phone' => $this->resource->outlet->phone,
+            'outlet_addr' => $this->resource->outlet->address,
             'number' => $this->resource->number,
             'customer_id' => intval($this->resource->customer_id),
             'customer_name' => $this->resource->customer->name,

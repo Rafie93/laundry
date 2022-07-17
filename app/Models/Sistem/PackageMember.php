@@ -20,7 +20,7 @@ class PackageMember extends Model
         "footer",
         "qris",
         "report_to_wa",
-        "auto_send_wa",
+        "auto_send_nota",
         "status"
     ];
 }

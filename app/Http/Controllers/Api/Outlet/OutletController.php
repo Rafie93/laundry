@@ -15,10 +15,16 @@ class OutletController extends Controller
     public function index()
     {
         $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+        $user = UserManajemen::where('user_id',auth()->user()->id)
+                                ->where('status',1)
+                                ->first();
+                                
         $stores = Outlet::orderBy('merchant_id','asc')
                         ->where(function ($query) use ($owner) {
                             if (auth()->user()->role==2 ){
                                 $query->where('merchant_id',$owner->id);
+                            }else{
+                                $query->where('id',$user->outlet_id);
                             }
                         })
                         ->get();

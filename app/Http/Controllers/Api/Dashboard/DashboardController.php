@@ -18,11 +18,13 @@ class DashboardController extends Controller
         $outlet_id = $user->outlet_id;
 
         $pendapatan = Order::whereDate('date_pay',date('Y-m-d'))
-                            ->where('status_payment',1)
+                            // ->where('status_payment',1)
+                            ->where('outlet_id',$outlet_id)
                             ->where('status_order','<>',4)
                             ->sum('grand_total');
         $pengeluaran = Expenditure::where('creator_id',auth()->user()->id)
                             ->whereDate('date',date('Y-m-d'))
+                            ->where('outlet_id',$outlet_id)
                             ->sum('cost');
 
         $orderIn = Order::where('outlet_id',$outlet_id)

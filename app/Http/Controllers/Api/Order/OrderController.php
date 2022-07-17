@@ -239,7 +239,7 @@ class OrderController extends Controller
                 $messageDetail = "\n";
                 foreach ($detail as $det) {
                     $messageDetail .= $det->service->name;
-                    $messageDetail .= "\n".$det->qty." x ".number_format($det->price)." = ".number_format($det->sub_total);
+                    $messageDetail .= "\n".$det->qty." x ".number_format($det->price)." = ".number_format($det->sub_total)."\n";
                 }
 
                 $message = "Outlet :".$outletName

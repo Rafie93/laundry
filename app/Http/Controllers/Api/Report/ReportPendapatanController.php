@@ -33,7 +33,7 @@ class ReportPendapatanController extends Controller
             $lunas = Order::where('status_payment',1)
                                 ->where('status_order','<>',4)
                                 ->where('remainder',0)
-                                ->where(function ($query) use ($owner,$request) {
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
                                     if (auth()->user()->role==2 ){
                                         if ($request->outlet_id=="") {
                                             $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
@@ -57,7 +57,7 @@ class ReportPendapatanController extends Controller
             $pengambilan = Order::where('status_payment',1)
                                 ->where('status_order','<>',4)
                                 ->where('remainder','>',0)
-                                ->where(function ($query) use ($owner,$request) {
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
                                     if (auth()->user()->role==2 ){
                                         if ($request->outlet_id=="") {
                                             $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
@@ -79,7 +79,7 @@ class ReportPendapatanController extends Controller
                                 ->sum('grand_total');
 
             $diskon = Order::where('status_order','<>',4)
-                                ->where(function ($query) use ($owner,$request) {
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
                                     if (auth()->user()->role==2 ){
                                         if ($request->outlet_id=="") {
                                             $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
@@ -108,7 +108,7 @@ class ReportPendapatanController extends Controller
                                 ->when($request->end, function ($query) use ($request) {
                                     $query->whereDate('date', '<=', "{$request->end}");
                                 })
-                                ->where(function ($query) use ($owner,$request) {
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
                                     if (auth()->user()->role==2 ){
                                         if ($request->outlet_id=="") {
                                             $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
@@ -126,7 +126,7 @@ class ReportPendapatanController extends Controller
             $pengeluaranDetail = Expenditure::select('expenditure_category.name',DB::raw("SUM(expenditure.cost) as nominal"))
                                 ->groupBy('expenditure_category.name')
                                 ->leftJoin('expenditure_category', 'expenditure_category.id', '=', 'expenditure.expenditure_category_id')
-                                ->where(function ($query) use ($owner,$request) {
+                                ->where(function ($query) use ($owner,$request,$outlet_id) {
                                     if (auth()->user()->role==2 ){
                                         if ($request->outlet_id=="") {
                                             $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();

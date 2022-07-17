@@ -9,6 +9,7 @@ use App\Http\Resources\User as UserResource;
 use Illuminate\Support\Facades\Validator;
 Use App\Models\Outlets\Outlet;
 Use App\Models\Users\UserManajemen;
+Use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {

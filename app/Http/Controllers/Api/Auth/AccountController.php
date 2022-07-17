@@ -56,8 +56,8 @@ class AccountController extends Controller
         $user = auth()->user();
         $validator = Validator::make($request->all(),[
             'fullname' => 'required|min:2',
-            'email'    => 'required|unique:users.'.$user->id,
-            'phone'=>'required|unique:users.'.$user->id,
+            'email'    => 'required',
+            'phone'=>'required',
         ]);
         if ($validator->fails()) {
             return response()->json(array("errors"=>validationErrors($validator->errors())), 422);

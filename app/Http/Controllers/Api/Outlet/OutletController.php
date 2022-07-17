@@ -9,6 +9,7 @@ use App\Models\Outlets\Merchant;
 use App\Http\Resources\Outlet\OutletList as ListResource;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Sistem\PackageMember;
+Use App\Models\Users\UserManajemen;
 
 class OutletController extends Controller
 {

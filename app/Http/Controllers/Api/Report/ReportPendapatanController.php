@@ -28,6 +28,7 @@ class ReportPendapatanController extends Controller
         if ($type=="Keuangan") {
             $lunas = Order::where('status_payment',1)
                                 ->where('status_order','<>',4)
+                                ->where('remainder',0)
                                 ->where('outlet_id',$outlet_id)
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('date_pay', '>=', "{$request->start}");

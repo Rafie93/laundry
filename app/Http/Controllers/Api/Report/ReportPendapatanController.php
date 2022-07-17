@@ -9,6 +9,8 @@ use App\Models\Order\OrderDetail;
 use App\Models\Expenditure\Expenditure;
 use Illuminate\Support\Facades\DB;
 Use App\Models\Users\UserManajemen;
+use App\Models\Outlets\Merchant;
+use App\Models\Outlets\Outlet;
 
 class ReportPendapatanController extends Controller
 {
@@ -18,6 +20,8 @@ class ReportPendapatanController extends Controller
         $start = $request->start ? $request->start : date('Y-m-d');
         $end = $request->end ? $request->end : date('Y-m-d');
         $type = $request->type;
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
         if (!$request->outlet_id) {
             $user = UserManajemen::where('user_id',auth()->user()->id)
                 ->where('status',1)
@@ -29,7 +33,19 @@ class ReportPendapatanController extends Controller
             $lunas = Order::where('status_payment',1)
                                 ->where('status_order','<>',4)
                                 ->where('remainder',0)
-                                ->where('outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('outlet_id',$outlet);
+                                        }else{
+                                            $query->where('outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('date_pay', '>=', "{$request->start}");
                                 })
@@ -41,17 +57,41 @@ class ReportPendapatanController extends Controller
             $pengambilan = Order::where('status_payment',1)
                                 ->where('status_order','<>',4)
                                 ->where('remainder','>',0)
-                                ->where('outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('outlet_id',$outlet);
+                                        }else{
+                                            $query->where('outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('date_pay', '>=', "{$request->start}");
                                 })
                                 ->when($request->end, function ($query) use ($request) {
-                                    $query->whereDate('date_entry', '<=', "{$request->end}");
+                                    $query->whereDate('date_pay', '<=', "{$request->end}");
                                 })
                                 ->sum('grand_total');
 
             $diskon = Order::where('status_order','<>',4)
-                                ->where('outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('outlet_id',$outlet);
+                                        }else{
+                                            $query->where('outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('date_pay', '>=', "{$request->start}");
                                 })
@@ -68,13 +108,37 @@ class ReportPendapatanController extends Controller
                                 ->when($request->end, function ($query) use ($request) {
                                     $query->whereDate('date', '<=', "{$request->end}");
                                 })
-                                ->where('outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('outlet_id',$outlet);
+                                        }else{
+                                            $query->where('outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->sum('cost');
 
             $pengeluaranDetail = Expenditure::select('expenditure_category.name',DB::raw("SUM(expenditure.cost) as nominal"))
                                 ->groupBy('expenditure_category.name')
                                 ->leftJoin('expenditure_category', 'expenditure_category.id', '=', 'expenditure.expenditure_category_id')
-                                ->where('expenditure.outlet_id',$outlet_id)
+                                ->where(function ($query) use ($owner,$request) {
+                                    if (auth()->user()->role==2 ){
+                                        if ($request->outlet_id=="") {
+                                            $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                            $query->whereIn('expenditure.outlet_id',$outlet);
+                                        }else{
+                                            $query->where('expenditure.outlet_id',$outlet_id);
+                                        }
+                                        
+                                    }else{
+                                        $query->where('expenditure.outlet_id',$outlet_id);
+                                    }
+                                })
                                 ->when($request->start, function ($query) use ($request) {
                                     $query->whereDate('expenditure.date', '>=', "{$request->start}");
                                 })

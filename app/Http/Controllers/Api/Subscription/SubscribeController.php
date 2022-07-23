@@ -9,7 +9,7 @@ use App\Models\Subscribe\Payment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Subscription\SubscribeList as ListResource;
-
+use App\Models\Outlets\Merchant;
 class SubscribeController extends Controller
 {
     public function history()
@@ -22,7 +22,6 @@ class SubscribeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'amount'   => 'required',
-            'merchant_id' => 'required',
             'package_member_id' => 'required',
             'number' => 'required||unique:subscribe'
         ]);
@@ -32,6 +31,7 @@ class SubscribeController extends Controller
         $request->merge([
             'date' => date('Y-m-d H:i:s'),
             'user_id' => auth()->user()->id,
+            'merchant_id' => Merchant::where('owner_id',auth()->user()->id)->first()->id,
             'customer_name' => auth()->user()->fullname,
             'customer_email' => auth()->user()->email,
             'customer_phone' => auth()->user()->phone,

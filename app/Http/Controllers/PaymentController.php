@@ -101,7 +101,7 @@ class PaymentController extends Controller
 						$package_member_id = $order->package_member_id;
 						$merchant_id = $order->merchant_id;
 						$package_member = PackageMember::find($package_member_id);
-						
+
 						if ($package_member) {
 							$durasi = $package_member->duration;
 							$duration_day = $package_member->duration_day;
@@ -117,7 +117,7 @@ class PaymentController extends Controller
 							if ($duration_day=="day") {
 								$newExpired =  \Carbon\Carbon::parse($dataMerchant->expired)->addDays($durasi);
 								if ($mExpired) {
-									$newExpired  = \Carbon\Carbon::now()->addDays($durasi);
+									$newExpired  = \Carbon\Carbon::parse('2022-08-23 14:38:21')->addDays($durasi);
 								}
 								Merchant::where('id', $merchant_id)
 										->update([

@@ -54,6 +54,7 @@
                                 <th>Slider</th>
                                 <th>Title</th>
                                 <th>Deskripsi</th>
+                                <th>Link</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -66,6 +67,7 @@
                                 </td>
                                 <td>{{$row->title}}</td>
                                 <td>{!!$row->description!!}</td>
+                                <td><a href="{{$row->link}}">{{$row->link}}</a></td>
                                 <td>
                                      <a href="{{Route('slider.edit',$row->id)}}" class="btn btn-warning"><i class="glyphicon glyphicon-edit"></i> Edit</a>
                                      <a href="#" class="btn btn-danger delete"  r-name="{{ $row->title}}" r-id="{{ $row->id }}">

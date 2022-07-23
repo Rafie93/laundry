@@ -46,6 +46,7 @@
                         <thead>
                             <tr>
                                 <th style="text-align: center">No</th>
+                                <th style="text-align: center">Aksi</th>
                                 <th style="text-align: center">Tanggal</th>
                                 <th style="text-align: center">Number</th>
                                 <th style="text-align: center">Merchant / Owner</th>
@@ -61,6 +62,9 @@
                         @foreach ($subscribes as $key=> $row)
                             <tr>
                                 <td>{{$subscribes->firstItem() + $key }}</td>
+                                <td>
+                                    <a href="{{Route('purchase.detail',$row->id)}}" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i> View</a>
+                                </td>
                                 <td>{{$row->date}}</td>
                                 <td>{{$row->number}}</td>
                                 <td>{{$row->merchant->name}}</td>
@@ -72,7 +76,7 @@
                                 <td>{{$row->package->package}}</td>
                                 <td style="text-align: right">{{number_format($row->amount)}}</td>
                                 <td style="text-align: center">
-                                    @if ($row->status == 'unpaid' || $row->status == null)
+                                    @if ($row->payment_status == 'unpaid' || $row->payment_status == null || $row->payment_status == "")
                                         <span class="label label-warning">Belum Lunas</span>
                                     @else 
                                         <span class="label label-success">Lunas</span>

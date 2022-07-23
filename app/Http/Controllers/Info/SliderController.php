@@ -48,27 +48,26 @@ class SliderController extends Controller
        }
         return redirect()->route('slider')->with('message','Slider Baru Berhasil ditambahkan');
     }
-    public function update(Request $request)
+    public function update(Request $request,$id)
     {        
         $this->validate($request,[
             'title' => 'required',
-            'slide' => 'required'
         ]);
         $slider = Slider::find($id);
         $slider->update($request->all());
-         if ($request->hasFile('file')) {
+         if ($request->hasFile('slide_change')) {
             $image_path = public_path().'/images/slider/'.$slider->slide;
             unlink($image_path);
 
-            $originName = $request->file('file')->getClientOriginalName();
+            $originName = $request->file('slide_change')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
-            $extension = $request->file('file')->getClientOriginalExtension();
+            $extension = $request->file('slide_change')->getClientOriginalExtension();
             $fileName = $fileName.'_'.time().'.'.$extension;
-            $request->file('file')->move('images/slider/',$fileName);
+            $request->file('slide_change')->move('images/slider/',$fileName);
             $slider->file = $fileName;
             $slider->save();
        }
-        return redirect()->route('slider')->with('message','Slider Baru Berhasil ditambahkan');
+        return redirect()->route('slider')->with('message','Slider Baru Berhasil diperbaharui');
     }
 
     public function upload(Request $request)

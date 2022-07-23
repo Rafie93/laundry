@@ -31,6 +31,16 @@
                                                 </span>
                                          @enderror
                                     </div>  
+                                    <div class="form-group @error('link') has-error @enderror">
+                                        <label class="form-label">Link</label>
+									    <input type="text" class="form-control @error('link') has-error @enderror"
+                                         placeholder="Link (Optional)" name="link" value="{{old('link') ? old('link') : $data->link}}">
+                                         @error('link')
+                                                <span class="help-block" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                         @enderror
+                                    </div> 
                                     <div class="form-group @error('description') has-error @enderror">
                                         <label class="form-label">Deskripsi</label>
                                         <textarea name="description" id="editor" class="description">{{old('description') ? old('description') : $data->description}}</textarea>
@@ -41,11 +51,11 @@
                                                 </span>
                                          @enderror
                                     </div>   
-                                    <div class="form-group @error('slide') has-error @enderror">
+                                    <div class="form-group @error('slide_change') has-error @enderror">
                                         <label class="form-label">Slide Image</label>
-									    <input type="file" class="form-control @error('slide') has-error @enderror"
-                                         placeholder="" name="slide" value="{{old('slide')}}">
-                                         @error('slide')
+									    <input type="file" class="form-control @error('slide_change') has-error @enderror"
+                                         placeholder="" name="slide_change" value="{{old('slide_change')}}">
+                                         @error('slide_change')
                                                 <span class="help-block" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

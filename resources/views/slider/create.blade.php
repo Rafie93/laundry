@@ -31,6 +31,16 @@
                                                 </span>
                                          @enderror
                                     </div>  
+                                    <div class="form-group @error('link') has-error @enderror">
+                                        <label class="form-label">Link</label>
+									    <input type="text" class="form-control @error('link') has-error @enderror"
+                                         placeholder="Link (Optional)" name="link" value="{{old('link')}}">
+                                         @error('link')
+                                                <span class="help-block" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                         @enderror
+                                    </div> 
                                     <div class="form-group @error('description') has-error @enderror">
                                         <label class="form-label">Deskripsi</label>
                                         <textarea name="description" id="editor" class="description">{{old('description')}}</textarea>

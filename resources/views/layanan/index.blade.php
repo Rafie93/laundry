@@ -55,6 +55,7 @@
                                 <th>Layanan</th>
                                 <th>Harga</th>
                                 <th>Satuan</th>
+                                <th>Estimasi</th>
                                 <th>Outlet</th>
                                 <th>Aksi</th>
                             </tr>
@@ -65,8 +66,11 @@
                                 <td>{{$layanans->firstItem() + $key }}</td>
                                 <td>{{$row->category->name}}</td>
                                 <td>{{$row->name}}</td>
-                                <td>{{$row->price}}</td>
-                                <td>{{$row->satuan}}</td>
+                                <td align="right">{{number_format($row->price)}}</td>
+                                <td align="center">{{$row->satuan}}</td>
+                                <td align="center">
+                                    {{$row->estimasi." ".$row->estimasi_type}}
+                                </td>
                                 <td>{{$row->outlet_id == null ? 'Semua Outlet' : $row->outlet->name}}</td>
                                 <td>
                                      <a href="{{Route('layanan.edit',$row->id)}}"  class="btn btn-warning">

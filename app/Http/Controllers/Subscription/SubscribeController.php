@@ -14,4 +14,10 @@ class SubscribeController extends Controller
                                 ->paginate(20);
         return view('subscription.index', compact('subscribes'));
     }
+
+    public function detail(Request $request,$id)
+    {
+        $data = Subscribe::find($id);
+        return view('subscription.detail', compact('data'));
+    }
 }

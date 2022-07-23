@@ -19,4 +19,15 @@ class Merchant extends Model
     {
         return $this->hasMany('App\Models\Outlets\Outlet', 'merchant_id');
     }
+
+    public function isStatusDisplay()
+    {
+        $awal  = date_create($this->expired);
+        $akhir = date_create(); 
+        $diff  = date_diff( $awal, $akhir );
+        if ($akhir > $awal) {
+            return "Expired";
+        }
+        return "Aktif";
+    }
 }

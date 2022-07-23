@@ -5,22 +5,38 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 Use App\Models\Outlets\Outlet;
 use App\Models\Outlets\Merchant;
-
+use App\Models\Order\Order;
 class StoresController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
         $owner = Merchant::where('owner_id',auth()->user()->id)->first();
 
         $stores = Outlet::orderBy('merchant_id','asc')
+                        ->select('outlet.*')
+                       ->leftJoin('merchant', 'merchant.id', '=', 'outlet.merchant_id')
                         ->where(function ($query) use ($owner) {
                             if (auth()->user()->role==2 ){
                                 $query->where('merchant_id',$owner->id);
                             }
                         })
+                        ->when($request->keyword, function ($query) use ($request) {
+                            $query->where('outlet.name', 'like', "%{$request->keyword}%")
+                                    ->orWhere('outlet.code', 'like', "%{$request->keyword}%")
+                                    ->orWhere('merchant.name', 'like', "%{$request->keyword}%");
+                        })
                         ->paginate(10);
         return view('stores.index', compact('stores'));
+    }
+
+    public function detail(Request $request,$id)
+    {
+        $outlet = Outlet::find($id);
+        $order = Order::orderBy('id','desc')->where('outlet_id',$id)->paginate(20);
+
+        return view('stores.detail',compact('outlet','order'));
+      
     }
     
     public function create()

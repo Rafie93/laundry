@@ -28,7 +28,7 @@
                                             <div class="form-group col-lg-4" style="float: right">
 
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control gp-search" name="keyword" value="{{request('keyword')}}" placeholder="Cari" value="" autocomplete="off">
+                                                    <input type="text" class="form-control gp-search" name="keyword" value="{{request('keyword')}}" placeholder="Cari Merchant Name / Outlet" value="" autocomplete="off">
                                                     <div class="input-group-btn">
                                                         <button type="submit" class="btn btn-default no-border btn-sm gp-search">
                                                         <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
@@ -74,7 +74,7 @@
                                     {{$row->merchant->package->package}}</a></td>
                                 <td>{{$row->merchant->expired}}</td>
                                   <td>
-                                     <a href="{{Route('outlet.edit',$row->id)}}" class="btn btn-primary"><i class="glyphicon glyphicon-eyes-open"></i> VIEW</a>
+                                     <a href="{{Route('outlet.detail',$row->id)}}" class="btn btn-primary"><i class="glyphicon glyphicon-eyes-open"></i> VIEW</a>
                                      {{-- <a href="#" class="btn btn-danger delete"  r-name="{{ $row->title}}" r-id="{{ $row->id }}">
                                         <i class="glyphicon glyphicon-trash"></i> Delete</a> --}}
                                  </td>

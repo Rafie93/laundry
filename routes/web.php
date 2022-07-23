@@ -77,6 +77,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/outlet/stores', [StoresController::class, 'store'])->name('outlet.store');
     Route::get('/outlet/{id}/edit', [StoresController::class, 'edit'])->name('outlet.edit');
     Route::post('/outlet/{id}/update', [StoresController::class, 'update'])->name('outlet.update');
+    Route::get('/outlet/{id}/detail', [StoresController::class, 'detail'])->name('outlet.detail');
 
     Route::get('/paket', [PaketSubscriptionController::class, 'index'])->name('paket');
     Route::get('/paket/create', [PaketSubscriptionController::class, 'create'])->name('paket.create');

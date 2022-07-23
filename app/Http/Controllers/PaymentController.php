@@ -144,8 +144,15 @@ class PaymentController extends Controller
 							}
 						}
 						$customerPhone = $order->customer_phone;
-						$message = "Terima Kasih sudah melakukan pembayaran senilai total Rp. "
-								.number_format($order->amount)
+						$customerName = $order->customer_name;
+
+						$message = "Terima Kasih sudah melakukan pembayaran"
+								.$customerName."\nInvoice : ".$order->number."\n"
+								.\Carbon\Carbon::parse($order->updated_at)->format('d M Y H:i:s')
+								."\nPaket ".$package_member->package
+								."\nDurasi ".$package_member->duration." ".$package_member->duration
+								."\nTotal ".number_format($order->amount)
+								."\nStatus Pembayaran ".$order->payment_status
 								."\n\n\nSalam Juragan Kasir Laundry";
 
 						sendMessage($customerPhone,$message);

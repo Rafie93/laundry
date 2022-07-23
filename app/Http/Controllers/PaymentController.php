@@ -105,17 +105,39 @@ class PaymentController extends Controller
 						if ($package_member) {
 							$durasi = $package_member->duration;
 							$duration_day = $package_member->duration_day;
+							
+							$dataMerchant = Merchant::find($merchant_id)->first();
+
+							$awal  = date_create($dataMerchant->expired);
+							$akhir = date_create(); 
+							$diff  = date_diff( $awal, $akhir );
+							$mExpired = false;
+							if ($akhir > $awal) {
+								$mExpired = true;
+							}
 							if ($duration_day=="day") {
+								$newExpired =  \Carbon\Carbon::parse($dataMerchant->expired)->addDays($durasi);
+								if ($mExpired) {
+									$newExpired  = \Carbon\Carbon::now()->addDays($durasi);
+								}
 								Merchant::where('id', $merchant_id)
 										->update([
-											'expired' => \Carbon\Carbon::now()->addDays($durasi)
+											'expired' => $newExpired
 										]);
 							}else if ($duration_day=="month") {
+								$newExpired =  \Carbon\Carbon::parse($dataMerchant->expired)->addMonth($durasi);
+								if ($mExpired) {
+									$newExpired  = \Carbon\Carbon::now()->addMonth($durasi);
+								}
 								Merchant::where('id', $merchant_id)
 										->update([
 										'expired' => \Carbon\Carbon::now()->addMonth($durasi)
 								]);
 							}else if ($duration_day=="year") {
+								$newExpired =  \Carbon\Carbon::parse($dataMerchant->expired)->addYear($durasi);
+								if ($mExpired) {
+									$newExpired  = \Carbon\Carbon::now()->addYear($durasi);
+								}
 								Merchant::where('id', $merchant_id)
 										->update([
 										'expired' => \Carbon\Carbon::now()->addYear($durasi)
@@ -126,7 +148,7 @@ class PaymentController extends Controller
 						$message = "Terima Kasih sudah melakukan pembayaran senilai total Rp. "
 								.number_format($order->amount)
 								."\n\n\nSalam Juragan Kasir Laundry";
-								
+
 						sendMessage($customerPhone,$message);
 
 					}

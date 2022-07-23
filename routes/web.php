@@ -22,6 +22,7 @@ use App\Http\Controllers\Master\MethodPaymentController;
 
 use App\Http\Controllers\Sistem\PaketSubscriptionController;
 use App\Http\Controllers\Subscription\SubscribeController;
+use App\Models\Subscribe\Subscribe;
 
 Route::get('/firebase',[HomeController::class, 'firebasetest']);
 
@@ -34,6 +35,7 @@ Route::get('payments/completed', [PaymentController::class,'completed']);
 Route::get('payments/failed', [PaymentController::class,'failed']);
 Route::get('payments/unfinish', [PaymentController::class,'unfinish']);
 
+ 
 Auth::routes(); 
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

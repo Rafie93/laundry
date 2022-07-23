@@ -21,6 +21,10 @@ class Subscribe extends Model
     {
         return $this->belongsTo('App\Models\Outlets\Merchant','merchant_id');
     }
+	public function user()
+    {
+        return $this->belongsTo('App\Models\User','user_id');
+    }
 
 
     public static function generateCode($type)

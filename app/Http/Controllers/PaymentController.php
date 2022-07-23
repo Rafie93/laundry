@@ -152,15 +152,13 @@ class PaymentController extends Controller
 	public function completed(Request $request)
 	{
 		$code = $request->query('order_id');
-		$order = Subscribe::where('number', $code)->firstOrFail();
+		$data = Subscribe::where('number', $code)->firstOrFail();
 		
-		if ($order->payment_status == Order::UNPAID) {
-			return redirect('payments/failed?order_id='. $code);
+		if ($data->payment_status == "UNPAID") {
+			return view('midtrans.completed',compact('data'));
 		}
-
-		\Session::flash('success', "Thank you for completing the payment process!");
-
-		// return redirect('orders/received/'. $order->id);
+ 
+		return view('midtrans.completed',compact('data'));
 	}
 
 	/**
@@ -173,11 +171,8 @@ class PaymentController extends Controller
 	public function unfinish(Request $request)
 	{
 		$code = $request->query('order_id');
-		$order = Subscribe::where('number', $code)->firstOrFail();
-
-		\Session::flash('error', "Sorry, we couldn't process your payment.");
-
-		return redirect('orders/received/'. $order->id);
+		$data = Subscribe::where('number', $code)->firstOrFail();
+		return view('midtrans.failed',compact('data'));
 	}
 
 	/**
@@ -190,10 +185,7 @@ class PaymentController extends Controller
 	public function failed(Request $request)
 	{
 		$code = $request->query('order_id');
-		$order = Subscribe::where('number', $code)->firstOrFail();
-
-		\Session::flash('error', "Sorry, we couldn't process your payment.");
-
-		return redirect('orders/received/'. $order->id);
+		$data = Subscribe::where('number', $code)->firstOrFail();
+		return view('midtrans.failed',compact('data'));
 	}
 }

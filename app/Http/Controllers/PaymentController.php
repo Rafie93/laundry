@@ -126,7 +126,7 @@ class PaymentController extends Controller
 							}else if ($duration_day=="month") {
 								$newExpired =  \Carbon\Carbon::parse($dataMerchant->expired)->addMonth($durasi);
 								if ($mExpired) {
-									$newExpired  = \Carbon\Carbon::now()->addMonth($durasi);
+									$newExpired  = \Carbon\Carbon::parse('2022-08-23 14:38:21')->addMonth($durasi);
 								}
 								Merchant::where('id', $merchant_id)
 										->update([

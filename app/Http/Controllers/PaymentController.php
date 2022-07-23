@@ -145,6 +145,7 @@ class PaymentController extends Controller
 						}
 						$customerPhone = $order->customer_phone;
 						$customerName = $order->customer_name;
+						$terbaruExp = Merchant::find($merchant_id)->expired;
 
 						$message = "Terima Kasih sudah melakukan pembayaran\n\n"
 								."Pelanggn : ".$customerName
@@ -154,6 +155,7 @@ class PaymentController extends Controller
 								."\nDurasi : ".$package_member->duration." ".$package_member->duration_day
 								."\nTotal : ".number_format($order->amount)
 								."\nStatus :  ".$order->payment_status
+								."\n\n Masa Berlaku Berlangganan kini hingga ".\Carbon\Carbon::parse($terbaruExp)->format('d M Y H:i:s')
 								."\n\n\nSalam Juragan Kasir Laundry";
 
 						sendMessage($customerPhone,$message);

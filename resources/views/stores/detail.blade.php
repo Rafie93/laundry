@@ -87,7 +87,7 @@
                                         <td>{{$row->date_complete}}</td>
                                         <td>{{$row->metode_payment}}</td>
                                         <td>{{$row->status_order == 1 ? 'Dibayar' : 'Belum Dibayar'}}</td>
-                                        <td>{{$row->creator->name}}</td>
+                                        <td>{{$row->creator->fullname}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

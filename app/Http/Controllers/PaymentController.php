@@ -101,9 +101,10 @@ class PaymentController extends Controller
 						$package_member_id = $order->package_member_id;
 						$merchant_id = $order->merchant_id;
 						$package_member = PackageMember::find($package_member_id);
+
 						if ($package_member) {
 							$durasi = $package_member->duration;
-							$durasi_day = $package_member->duration_day;
+							$duration_day = $package_member->duration_day;
 							if ($duration_day=="day") {
 								Merchant::where('id', $merchant_id)
 										->update([
@@ -121,6 +122,13 @@ class PaymentController extends Controller
 								]);
 							}
 						}
+						$customerPhone = $order->customer_phone;
+						$message = "Terima Kasih sudah melakukan pembayaran senilai total Rp. "
+								.number_format($order->amount)
+								."\n\n\nSalam Juragan Kasir Laundry";
+								
+						sendMessage($customerPhone,$message);
+
 					}
 				}
 			);

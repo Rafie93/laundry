@@ -14,7 +14,7 @@ class SubscribeController extends Controller
 {
     public function history()
     {
-        $data = Subscribe::where('user_id', auth()->user()->id)->get();
+        $data = Subscribe::orderBy('id','desc')->where('user_id', auth()->user()->id)->get();
         return new ListResource($data);
 
     }

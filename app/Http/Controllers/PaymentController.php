@@ -101,17 +101,16 @@ class PaymentController extends Controller
 						$package_member_id = $order->package_member_id;
 						$merchant_id = $order->merchant_id;
 						$package_member = PackageMember::find($package_member_id);
-
+						$mExpired = false;
 						if ($package_member) {
 							$durasi = $package_member->duration;
 							$duration_day = $package_member->duration_day;
 							
-							$dataMerchant = Merchant::find($merchant_id)->first();
+							$dataMerchant = Merchant::where('id',$merchant_id)->first();
 
 							$awal  = date_create($dataMerchant->expired);
 							$akhir = date_create(); 
 							$diff  = date_diff( $awal, $akhir );
-							$mExpired = false;
 							if ($akhir > $awal) {
 								$mExpired = true;
 							}
@@ -146,7 +145,7 @@ class PaymentController extends Controller
 						}
 						$customerPhone = $order->customer_phone;
 						$message = "Terima Kasih sudah melakukan pembayaran senilai total Rp. "
-								.number_format($order->amount)
+								.number_format($order->amount)." tess ".$mExpired
 								."\n\n\nSalam Juragan Kasir Laundry";
 
 						sendMessage($customerPhone,$message);

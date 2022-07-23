@@ -285,13 +285,18 @@ a {
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tbody><tr>
                                         <td class="content-block">
-                                            <h2>Thank you the payment process!</h2>
+                                            @if ($data->payment_status==null)
+                                                <h2>Segera Lakukan Pembayaran</h2>
+                                            @else
+                                                <h2>Thank you the payment process!</h2>
+                                            @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="content-block">
                                             <table class="invoice">
-                                                <tbody><tr>
+                                                <tbody>
+                                                    <tr>
                                                     <td>{{$data->customer_name.' '.$data->customer_phone}}<br>Invoice #{{$data->number}}<br>
                                                         {{Carbon\Carbon::parse($data->date)->format('d M Y')}}</td>
                                                 </tr>
@@ -315,12 +320,19 @@ a {
                                                         </tbody></table>
                                                     </td>
                                                 </tr>
+                                                @if ($data->payment_status==null)
+                                                    <tr>
+                                                        <td class="content-block">
+                                                            <a href="{{$data->payment_link}}">Informasi Pembayaran Klik Disini !!!</a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                               
                                             </tbody></table>
                                         </td>
                                     </tr>
                                     {{-- <tr>
                                         <td class="content-block">
-                                            <a href="#">View in browser</a>
                                         </td>
                                     </tr>
                                     <tr>

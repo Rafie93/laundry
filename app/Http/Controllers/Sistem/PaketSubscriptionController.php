@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Sistem;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Sistem\PackageMember;
-
+use App\Models\Outlets\Merchant;
 class PaketSubscriptionController extends Controller
 {
     public function index(Request $request)
     {
         $pakets = PackageMember::orderBy('id','desc')
+                        ->whereNull('deleted_at')
                         ->paginate(10);
 
 
@@ -59,8 +60,17 @@ class PaketSubscriptionController extends Controller
     public function delete($id)
     {
        $cat = PackageMember::find($id);
-       $cat->delete();
-        return redirect()->route('paket')->with('message','Paket Berlangganan Berhasil dihapus');
+       $m = Merchant::where('package_member_id',$id)->get()->count();
+       if ($m > 0) {
+            $cat->update([
+                'status' => 0,
+                'deleted_at' => date('Y-m-d H:i:s')
+            ]);
+            return redirect()->route('paket')->with('message','Status Paket Berlangganan Di Non Aktifkan');
+       }else{
+            $cat->delete();
+            return redirect()->route('paket')->with('message','Paket Berlangganan Berhasil dihapus');
+       } 
      
     }
 }

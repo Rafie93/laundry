@@ -13,6 +13,7 @@ class LayananController extends Controller
     public function index(Request $request)
     {
         $layanans = Service::orderBy('id','desc')
+                            ->where('deleted',0)
                             ->where(function ($query) {
                                 if (auth()->user()->isSuperAdmin() ){
                                     $query->whereNull('outlet_id');
@@ -103,10 +104,14 @@ class LayananController extends Controller
     public function delete($id)
     {
        $cat = Service::find($id);
-       if ($cat->service->count() == 0) {
+       if ($cat->detail->count() == 0) {
            $cat->delete();
            return redirect()->route('layanan')->with('message','Layanan Berhasil dihapus');
+       }else{
+            $cat->update([
+                'deleted' => 1
+            ]);
+            return redirect()->route('layanan')->with('message','Layanan Berhasil dihapus');
        }
-        return redirect()->route('layanan')->with('error','Layanan tidak bisa dihapus');
     }
 }

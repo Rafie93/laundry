@@ -19,13 +19,13 @@
                     <div class="card-body">
                         <div class="user-profile">
                             <div class="row">
-                                <div class="col-lg-4">
+                                {{-- <div class="col-lg-4">
                                     <div class="user-photo m-b-30">
                                         <img class="img-responsive" src="assets/images/user-profile.jpg" alt="" />
                                     </div>
                                  
-                                </div>
-                                <div class="col-lg-8">
+                                </div> --}}
+                                <div class="col-lg-12">
                                     <div class="user-profile-name">{{$data->fullname}}</div>
                                     <div class="user-Location"><i class="ti-location-pin"></i> 
                                         @if ($data->store_id != null)
@@ -62,7 +62,7 @@
                                                     </div>
                                                      <div class="gender-content">
                                                         <span class="contact-title">Gender:</span>
-                                                        <span class="gender">{{$data->IS_GENDER()}}</span>
+                                                        <span class="gender">{{$data->gender}}</span>
                                                     </div>
                                                     <div class="skype-content">
                                                         <span class="contact-title">Status:</span>

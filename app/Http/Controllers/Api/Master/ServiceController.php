@@ -19,11 +19,12 @@ class ServiceController extends Controller
                                         ->first();
                                         
         $data = Service::orderBy('id','desc')
+                        ->where('deleted',0)
                         ->where('outlet_id',$user->outlet_id)
                         ->get();
 
         if ($data->count() == 0) {
-           $default =  Service::orderBy('id','desc')->whereNull('outlet_id')->get();
+           $default =  Service::orderBy('id','desc')->whereNull('outlet_id')->where('deleted',0)->get();
            foreach ($default as $row) {
             Service::create([
                 'outlet_id' => $user->outlet_id,
@@ -37,6 +38,7 @@ class ServiceController extends Controller
               ]);
            }
            $data = Service::orderBy('id','desc')
+                       ->where('deleted',0)
                         ->where('outlet_id',$user->outlet_id)
                         ->get();
         }

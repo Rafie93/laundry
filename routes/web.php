@@ -84,6 +84,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/paket/stores', [PaketSubscriptionController::class, 'store'])->name('paket.store');
     Route::get('/paket/{id}/edit', [PaketSubscriptionController::class, 'edit'])->name('paket.edit');
     Route::post('/paket/{id}/update', [PaketSubscriptionController::class, 'update'])->name('paket.update');
+    Route::get('/paket/{id}/delete', [PaketSubscriptionController::class, 'delete'])->name('paket.delete');
 
     Route::get('/category', [CategoryController::class, 'index'])->name('category');
     Route::get('/category/create', [CategoryController::class, 'create'])->name('category.create');

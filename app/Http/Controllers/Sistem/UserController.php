@@ -108,11 +108,11 @@ class UserController extends Controller
     {
         $this->validate($request,[
             'fullname' => 'required|min:2',
-            'email'    => 'required|unique:users.'.$id,
+            'email'    => 'required',
             'phone'=>'required',
         ]);
-        if ($request->password_old!="") {
-            $request->merge(['password'=>bcrypt($request->password_old)]);
+        if ($request->password_change!="") {
+            $request->merge(['password'=>bcrypt($request->password_change)]);
         }
         $user = User::find($id);
         $user->update($request->all());

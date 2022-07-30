@@ -21,6 +21,7 @@ class PackageMember extends Model
         "qris",
         "report_to_wa",
         "auto_send_nota",
-        "status"
+        "status",
+        "deleted_at"
     ];
 }

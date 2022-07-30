@@ -31,6 +31,7 @@ class CategoryController extends Controller
                 ]);
             }
             $data = Category::orderBy('id','desc')
+                        ->where('deleted',0)
                         ->where('outlet_id',$user->outlet_id)
                         ->get();
         }

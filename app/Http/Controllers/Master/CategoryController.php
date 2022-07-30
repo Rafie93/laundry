@@ -11,6 +11,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $categorys = Category::orderBy('id','desc')
+                        ->where('deleted',0)
                         ->where(function ($query) {
                             if (auth()->user()->isSuperAdmin() ){
                                 $query->whereNull('outlet_id');
@@ -64,7 +65,12 @@ class CategoryController extends Controller
        if ($cat->service->count() == 0) {
            $cat->delete();
            return redirect()->route('category')->with('message','Kategori Berhasil dihapus');
+       }else{
+        $cat->update([
+            'deleted' => 1
+        ]);
+        return redirect()->route('category')->with('message','Kategori Berhasil dihapus');
+
        }
-        return redirect()->route('category')->with('error','Kategori tidak bisa dihapus');
     }
 }

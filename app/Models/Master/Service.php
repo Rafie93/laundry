@@ -19,4 +19,9 @@ class Service extends Model
     {
         return $this->belongsTo('App\Models\Master\Category');
     }
+
+    public function detail()
+    {
+        return $this->hasMany('App\Models\Order\OrderDetail','service_id');
+    }
 }

@@ -12,6 +12,7 @@ class PackageController extends Controller
     public function index(Request $request)
     {
         $pakets = PackageMember::orderBy('id','asc')
+                    ->whereNull('deleted_at')
                     ->where('id','!=',1)->get();
         return new ListResource($pakets);
     }

@@ -65,7 +65,7 @@
                                 <td>{{$row->alias}}</td>
                                 <td>{{$row->outlet_id == null ? 'Semua Outlet' : $row->outlet->name}}</td>
                                 <td>
-                                     <a href="{{Route('category.edit',$row->id)}}"  class="btn btn-warning">
+                                     <a href="{{Route('satuan.edit',$row->id)}}"  class="btn btn-warning">
                                         <i class="glyphicon glyphicon-edit"></i> Edit</a>
                                     <a href="#" class="btn btn-danger delete"  r-name="{{ $row->name}}" r-id="{{ $row->id }}">
                                         <i class="glyphicon glyphicon-trash"></i> Delete</a>
@@ -102,7 +102,7 @@
                 },
                 function(){
                     setTimeout(function(){
-                         window.location =  "/category/"+id+"/delete";
+                         window.location =  "/satuan/"+id+"/delete";
                     }, 2000);
                 });
             });

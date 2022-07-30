@@ -130,15 +130,15 @@
                                             </span>
                                         </label>
                                     </div>
-                                   <div class="form-group @error('password_old') has-error @enderror">
+                                   <div class="form-group @error('password_change') has-error @enderror">
                                         <i>*** Isi password jika ingin mengganti password baru</i>
                                         <label class="form-label">Password</label>
                                         <input type="password" 
-                                            class="form-control @error('password_old') is-invalid @enderror" 
+                                            class="form-control @error('password_change') is-invalid @enderror" 
                                             placeholder="" 
-                                            name="password"
-                                            required>
-                                        @error('password')
+                                            name="password_change"
+                                            >
+                                        @error('password_change')
                                                 <span class="help-block" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -150,7 +150,7 @@
                                             class="form-control @error('repassword') is-invalid @enderror" 
                                             placeholder="" 
                                             name="repassword" 
-                                            required>
+                                            >
                                         @error('repassword')
                                                 <span class="help-block" role="alert">
                                                     <strong>{{ $message }}</strong>

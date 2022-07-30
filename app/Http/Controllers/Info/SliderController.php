@@ -89,8 +89,6 @@ class SliderController extends Controller
      public function delete($id)
     {
         $slider=Slider::find($id);
-        $image_path = public_path().'/images/slider/'.$slider->slide;
-        unlink($image_path);
         $slider->delete();
         return redirect()->route('slider')->with('message','Berhasil dihapus');
     }

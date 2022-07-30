@@ -59,11 +59,9 @@ class SatuanController extends Controller
     }
     public function delete($id)
     {
-       $cat = Satuan::find($id);
-       if ($cat->service->count() == 0) {
-           $cat->delete();
-           return redirect()->route('satuan')->with('message','Satuan Berhasil dihapus');
-       }
-        return redirect()->route('satuan')->with('error','Satuan tidak bisa dihapus');
+        $cat = Satuan::find($id);
+        $cat->delete();
+        return redirect()->route('satuan')->with('message','Satuan Berhasil dihapus');
+       
     }
 }

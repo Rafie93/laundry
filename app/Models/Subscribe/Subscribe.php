@@ -4,6 +4,7 @@ namespace App\Models\Subscribe;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Sales\Payment;
 
 class Subscribe extends Model
 {
@@ -25,6 +26,11 @@ class Subscribe extends Model
     {
         return $this->belongsTo('App\Models\User','user_id');
     }
+
+	public function payment()
+	{
+		return Payment::where('sales_id',$this->id)->get()->first();
+	}
 
 
     public static function generateCode($type)

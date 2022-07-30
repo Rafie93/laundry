@@ -47,6 +47,38 @@
                             <td>Grand Total </td>
                             <td>{{number_format($data->amount)}}</td>
                         </tr>
+                        
+                        @if ($data->payment())
+                            <tr>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Detail Payment</td>
+                            </tr>
+                            <tr>
+                                <td>Pay Number </td>
+                                <td>{{$data->payment()->number}}</td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal Pay </td>
+                                <td>{{$data->payment()->created_at}}</td>
+                            </tr>
+                            <tr>
+                                <td>Status </td>
+                                <td>{{$data->payment()->status}}</td>
+                            </tr>
+                            <tr>
+                                <td>Method </td>
+                                <td>{{$data->payment()->payment_type}}</td>
+                            </tr>
+                            @if ($data->payment()->payment_type=="bank_transfer")
+                                <tr>
+                                    <td>Nama Bank </td>
+                                    <td>{{$data->payment()->vendor_name}}</td>
+                                </tr>
+                            @endif
+                        @endif
+                        
                     </tbody>
                   </table>
                 </div>

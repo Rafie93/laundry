@@ -53,9 +53,9 @@
                                 <th style="text-align: center">Outlet</th>
                                 <th style="text-align: center">Paket</th>
                                 <th style="text-align: center">Biaya</th>
-                                <th style="text-align: center">Status Pembayaran</th>
-                                <th style="text-align: center">Customer Name</th>
-                                <th style="text-align: center">Customer Phone</th>
+                                <th style="text-align: center">Status</th>
+                                <th style="text-align: center">Metode Pembayaran</th>
+                                <th style="text-align: center">Customer</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,8 +82,19 @@
                                         <span class="label label-success">Lunas</span>
                                     @endif
                                 </td>
-                                <td>{{$row->customer_name}}</td>
-                                <td>{{$row->customer_phone}}</td>
+                                <td>
+                                    @if ($row->payment())
+                                        {{$row->payment()->payment_type}}
+                                        @if ($row->payment()->payment_type=="bank_transfer")
+                                            <br>
+                                            {{$row->payment()->vendor_name}}
+                                        @endif
+                                        <br>
+                                        {{$row->payment()->created_at}}
+
+                                    @endif
+                                </td>
+                                <td>{{$row->customer_name}}<br>{{$row->customer_phone}}</td>
                                 
                             </tr>
                         @endforeach

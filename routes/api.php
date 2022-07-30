@@ -148,6 +148,7 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'as' => 'api.'], function()
 
         Route::get('receipt', [ReceiptController::class,'index']);
         Route::post('receipt/update', [ReceiptController::class,'update']);
+        Route::post('receipt/edit', [ReceiptController::class,'update']);
 
     });
 });

@@ -132,7 +132,7 @@ class DashboardController extends Controller
                                                 ->get();
                 if ($pendaptaanSub->count()>0) {
                     foreach ($pendaptaanSub as $d) {
-                        $data[] = number_format($d->data);
+                        $data[] = $d->data;
                     }
                 }else{
                     $data[] = 0;

@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/getPendapatanBerlangganan', [DashboardController::class, 'getPendapatanBerlangganan'])->name('dashboard.getPendapatanBerlangganan');
     Route::get('/dashboard/getOutletTambahan', [DashboardController::class, 'getOutletTambahan'])->name('dashboard.getOutletTambahan');
+    Route::get('/dashboard/getLayananBulanIni', [DashboardController::class, 'getLayananBulanIni'])->name('dashboard.getLayananBulanIni');
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/purchase', [SubscribeController::class, 'index'])->name('purchase');

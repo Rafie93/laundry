@@ -96,11 +96,11 @@
                         <!-- /# column -->
                     </div>
                     <!-- /# row -->
-                    {{-- <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-12">
                             <div class="card alert">
                                 <div class="card-header">
-                                    <h4>Pendapatan Paket Berlangganan </h4>
+                                    <h4>Jumlah Layanan Bulan Ini</h4>
                                     <div class="card-header-right-icon">
                                         <ul>
                                             <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
@@ -108,31 +108,13 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="sales-chart  card-content">
-                                    <canvas id="sales-chart"></canvas>
+                                <div class="layanan-chart  card-content">
+                                    <canvas id="layanan-chart"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <!-- /# column -->
-                        <div class="col-lg-6">
-                            <div class="card alert">
-                                <div class="card-header">
-                                    <h4>Team Total Completed </h4>
-                                    <div class="card-header-right-icon">
-                                        <ul>
-                                            <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
-                                            <li class="card-collapse"><i class="fa fa-window-restore"></i></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="sales-chart card-content">
-                                    <canvas id="team-chart"></canvas>
-                                </div>
-                            </div>
-                        </div> 
-                        <!-- /# column -->
-                    </div> --}}
-                    <!-- /# row -->
+                       
+                    </div>
                                      
                  <!-- /# card -->
              </div>
@@ -144,19 +126,48 @@
  </div>
 @endsection
 @section('script')
-    <script src="assets/js/lib/chart-js/Chart.bundle.js"></script>
-    <script src="assets/js/lib/chart-js/chartjs-init.js"></script>
-    <!-- // Chart js -->
-    <!--  Datamap -->
-    <script src="assets/js/lib/datamap/d3.min.js"></script>
-    <script src="assets/js/lib/datamap/topojson.js"></script>
-    <script src="assets/js/lib/datamap/datamaps.world.min.js"></script>
-    <script src="assets/js/lib/datamap/datamap-init.js"></script>
-    <script src="assets/lib/lobipanel/js/lobipanel.js"></script>
-    <script src="assets/js/scripts.js"></script>
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-    crossorigin="anonymous"></script>
+<script src="assets/js/lib/chart-js/Chart.bundle.js"></script>
+{{-- <script src="assets/js/lib/chart-js/chartjs-init.js"></script> --}}
+<!-- // Chart js -->
+{{-- <script src="assets/js/scripts.js"></script> --}}
+
+
+<script>
+     $(document).ready(function() {
+        $.ajax({
+                url: "{{ route('dashboard.getLayananBulanIni') }}",
+                type: "GET",
+                dataType: 'json',
+                success: function(rtnData) {
+                    $.each(rtnData, function(dataType, data) {
+                        // alert(data.datasets);
+
+                        var ctx = document.getElementById("layanan-chart").getContext("2d");
+                        var config = {
+                            type: 'bar',
+                            defaultFontFamily: 'Montserrat',
+                            data: {
+                                datasets: data.datasets,
+                                labels: data.labels
+                            },
+                            options: {
+                            legend: {
+                                display: false
+                            }
+                          
+                        }
+                          
+                        };
+                        window.myLine = new Chart(ctx, config);
+                    });
+                },
+                error: function(rtnData) {
+                    alert('error' + rtnData);
+                }
+        });
+ 
+      
+    });
     
+</script>
 @endsection

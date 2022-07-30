@@ -198,6 +198,53 @@ class DashboardController extends Controller
         ));            
     }
 
+    public function getLayananBulanIni()
+    {
+        $role = auth()->user()->role;
+        $user = UserManajemen::where('user_id',auth()->user()->id)
+                                    ->where('status',1)
+                                    ->first();
+        $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
+        $outlet_id = $user->outlet_id;
+        
+        $merchant = OrderDetail::select(DB::raw('count(order_detail.id) AS data'),
+                                'order_detail.service_id')
+                                ->leftJoin('order', 'order.id', '=', 'order_detail.order_id')
+                                ->groupBy('order_detail.service_id')
+                                ->where('order.status_order','<>',4)
+                                ->where(function ($query) use ($owner,$outlet_id) {
+                                    if (auth()->user()->role==2 ){
+                                        $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                        $query->whereIn('order.outlet_id',$outlet);
+                                    }else{
+                                        $query->where('order.outlet_id',$outlet_id);
+                                    }
+                                })
+                                ->whereYear('date_entry', date('Y'))
+                                ->whereMonth('date_entry',date('m'))
+                                ->get();
+        $labels = array();
+        $data = array();
+        $background = array();
+        foreach ($merchant as $key => $val) {
+           $labels[] = $val->service->name;
+           $data[] = $val->data;
+           $background[] = $this->rand_color();
+        }
+        $dataset[]=array(
+            'data' => $data,
+            'backgroundColor' => $background,
+        );
+        $output = array(
+            'labels' => $labels,
+            'datasets' => $dataset,
+        );
+        return response()->json(array(
+            "data" => $output
+        ));            
+    }
+
     function rand_color() {
         return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
     }

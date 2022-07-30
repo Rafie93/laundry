@@ -210,8 +210,8 @@ class DashboardController extends Controller
         
         $merchant = OrderDetail::select(DB::raw('count(order_detail.id) AS data'),
                                 'order_detail.service_id')
-                                ->leftJoin('order', 'order.id', '=', 'order_detail.order_id')
                                 ->groupBy('order_detail.service_id')
+                                ->leftJoin('order', 'order.id', '=', 'order_detail.order_id')
                                 ->where('order.status_order','<>',4)
                                 ->where(function ($query) use ($owner,$outlet_id) {
                                     if (auth()->user()->role==2 ){

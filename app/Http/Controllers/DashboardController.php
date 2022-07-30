@@ -100,4 +100,123 @@ class DashboardController extends Controller
         }
         return view('dashboard.super',compact('totalBerlangganan','totalUser','totalOutlet','totalBelumBerlangganan'));
     }
+
+    public function getPendapatanBerlangganan(Request $request)
+    {
+        $label = Subscribe::orderBy('month','asc')
+                                        ->select(DB::raw('MONTH(date) month'))
+                                        ->groupBy('month')
+                                        ->whereYear('date', date('Y'))
+                                        ->where('payment_status','paid')
+                                        ->get();
+
+        $dataset = array();
+        $subDataKategori = Subscribe::select(DB::raw('package_member_id'))
+                                    ->groupBy('package_member_id')
+                                    ->whereYear('date', date('Y'))
+                                    ->where('payment_status','paid')
+                                    ->get();
+
+        foreach ($subDataKategori as $rdk) {
+            $data=array();
+            foreach ($label as $month) {
+                $pendaptaanSub = Subscribe::orderBy('month','asc')
+                                        ->select(DB::raw('sum(amount) AS data'),
+                                                    DB::raw('package_member_id'),
+                                                    DB::raw('MONTH(date) month'))
+                                                ->groupBy('package_member_id','month')
+                                                ->where('package_member_id',$rdk->package_member_id)
+                                                ->whereYear('date', date('Y'))
+                                                ->whereMonth('date',$month->month)
+                                                ->where('payment_status','paid')
+                                                ->get();
+                if ($pendaptaanSub->count()>0) {
+                    foreach ($pendaptaanSub as $d) {
+                        $data[] = $d->data;
+                    }
+                }else{
+                    $data[] = 0;
+                }
+              
+               
+            }
+            $dataset[] = array(
+                'label' => $rdk->package->package,
+                'data' => $data,
+                'borderColor'=> $this->rand_color(),
+                'borderWidth' => 3,
+                'pointStyle' => 'circle',
+                'pointRadius'=> 5,
+                'pointBackgroundColor' => $this->rand_color(),
+            );
+        }
+
+        $outLabel = array();
+        foreach ($label as $lab) {
+            $outLabel[] = $this->intToMonth($lab->month);
+        }
+       
+
+        $output = array(
+            'title' => "Pendapatan Berlangganan",
+            'type' => "line",
+            'labels' => $outLabel,
+            'datasets' => $dataset
+        );
+
+        return response()->json(array(
+            "data" => $output
+        ));
+
+    }
+
+    function rand_color() {
+        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
+
+    function intToMonth($num)
+    {
+        switch ($num) {
+            case 1:
+                    return "Januari";
+                    break;
+            case 2:
+                    return "Februari";
+                    break;
+                case 3:
+                    return "Maret";
+                    break;
+                case 4:
+                    return "April";
+                    break;
+                case 5:
+                    return "Mei";
+                    break;
+                case 6:
+                    return "Juni";
+                    break;
+                case 7:
+                    return "Juli";
+                    break;
+                case 8:
+                    return "Agustus";
+                    break;
+                case 9:
+                    return "September";
+                    break;
+                case 10:
+                    return "Oktober";
+                    break;
+                case 11:
+                    return "November";
+                    break;
+                case 12:
+                    return "Desember";
+                    break;
+            
+            default:
+                return "";
+                break;
+        }
+    }
 }

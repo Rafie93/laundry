@@ -35,11 +35,14 @@ Route::get('payments/completed', [PaymentController::class,'completed']);
 Route::get('payments/failed', [PaymentController::class,'failed']);
 Route::get('payments/unfinish', [PaymentController::class,'unfinish']);
 
+
  
 Auth::routes(); 
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/getPendapatanBerlangganan', [DashboardController::class, 'getPendapatanBerlangganan'])->name('dashboard.getPendapatanBerlangganan');
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/purchase', [SubscribeController::class, 'index'])->name('purchase');
     Route::get('/purchase/detail/{id}', [SubscribeController::class, 'detail'])->name('purchase.detail');

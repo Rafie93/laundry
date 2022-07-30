@@ -115,6 +115,25 @@
                         </div>
                        
                     </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card alert">
+                                <div class="card-header">
+                                    <h4>Pertumbuhan Outlet Bergabung</h4>
+                                    <div class="card-header-right-icon">
+                                        <ul>
+                                            <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
+                                            <li class="card-collapse"><i class="fa fa-window-restore"></i></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="outlet-chart  card-content">
+                                    <canvas id="outlet-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
                     <!-- /# row -->
                                      
                  <!-- /# card -->
@@ -165,7 +184,39 @@
                 error: function(rtnData) {
                     alert('error' + rtnData);
                 }
-            });
+        });
+
+        $.ajax({
+                url: "{{ route('dashboard.getOutletTambahan') }}",
+                type: "GET",
+                dataType: 'json',
+                success: function(rtnData) {
+                    $.each(rtnData, function(dataType, data) {
+                        // alert(data.datasets);
+
+                        var ctx = document.getElementById("outlet-chart").getContext("2d");
+                        var config = {
+                            type: 'bar',
+                            defaultFontFamily: 'Montserrat',
+                            data: {
+                                datasets: data.datasets,
+                                labels: data.labels
+                            },
+                            options: {
+                            legend: {
+                                display: false
+                            }
+                          
+                        }
+                          
+                        };
+                        window.myLine = new Chart(ctx, config);
+                    });
+                },
+                error: function(rtnData) {
+                    alert('error' + rtnData);
+                }
+        });
  
       
     });

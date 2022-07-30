@@ -170,6 +170,34 @@ class DashboardController extends Controller
 
     }
 
+    public function getOutletTambahan()
+    {
+        $merchant = Merchant::select(DB::raw('count(id) AS data'),
+                                      DB::raw('MONTH(created_at) month'))
+                                ->groupBy('month')
+                                ->whereYear('created_at', date('Y'))
+                                ->get();
+        $labels = array();
+        $data = array();
+        $background = array();
+        foreach ($merchant as $key => $val) {
+           $labels[] = $this->intToMonth($val->month);
+           $data[] = $val->data;
+           $background[] = $this->rand_color();
+        }
+        $dataset[]=array(
+            'data' => $data,
+            'backgroundColor' => $background,
+        );
+        $output = array(
+            'labels' => $labels,
+            'datasets' => $dataset,
+        );
+        return response()->json(array(
+            "data" => $output
+        ));            
+    }
+
     function rand_color() {
         return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
     }

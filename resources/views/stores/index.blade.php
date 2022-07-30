@@ -57,6 +57,7 @@
                                 <th class="d-none d-md-table-cell">Alamat</th>
                                 <th>Paket</th>
                                 <th>Expired</th>
+                                <th>Transaksi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -73,6 +74,7 @@
                                 <td><a href="{{Route('paket')}}">
                                     {{$row->merchant->package->package}}</a></td>
                                 <td>{{$row->merchant->expired}}</td>
+                                <td>{{$row->order->count()}}</td>
                                   <td>
                                      <a href="{{Route('outlet.detail',$row->id)}}" class="btn btn-primary"><i class="glyphicon glyphicon-eyes-open"></i> VIEW</a>
                                      {{-- <a href="#" class="btn btn-danger delete"  r-name="{{ $row->title}}" r-id="{{ $row->id }}">

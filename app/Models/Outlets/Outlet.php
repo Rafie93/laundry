@@ -22,4 +22,10 @@ class Outlet extends Model
     {
         return $this->belongsTo('App\Models\Outlets\Merchant');
     }
+
+    public function order()
+    {
+        return $this->hasMany('App\Models\Order\Order', 'outlet_id')->where('status_order','<>', 4);
+    }
+
 }

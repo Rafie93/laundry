@@ -33,8 +33,8 @@ class ReceiptController extends Controller
     public function update(Request $request)
     {
         $user = UserManajemen::where('user_id',auth()->user()->id)
-        ->where('status',1)
-        ->first();
+                ->where('status',1)
+                ->first();
 
         $outletId = $user->outlet_id;
         $receipt = Outlet::find($outletId);
@@ -56,7 +56,7 @@ class ReceiptController extends Controller
 
        return response()->json([
         'success'=>true,
-            'message'=>'Pengaturan Receipt Berhasil dilakukan'
+        'message'=>'Pengaturan Receipt Berhasil dilakukan'
         ], 200);
     }
 }

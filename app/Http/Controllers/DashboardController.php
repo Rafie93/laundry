@@ -7,6 +7,12 @@ use  App\Models\Outlets\Merchant;
 use  App\Models\User;
 use App\Models\Subscribe\Subscribe;
 use  App\Models\Outlets\Outlet;
+Use App\Models\Users\UserManajemen;
+use App\Models\Order\Order;
+use App\Models\Order\OrderDetail;
+use Illuminate\Support\Facades\DB;
+use App\Models\Outlets\Customer;
+use App\Models\Expenditure\Expenditure;
 
 class DashboardController extends Controller
 {
@@ -22,11 +28,76 @@ class DashboardController extends Controller
 
         $totalOutlet = Outlet::where('status',1)->count();
         $totalUser = User::where('role','<>',1)->count();
-        if ($role==12) {
-            return view('dashboard.admin',compact('totalBerlangganan','totalUser','totalOutlet','totalBelumBerlangganan'));
-        }else if ($role==16) {
-            return view('dashboard.kurir');
+        if ($role==2 || $role == 3 || $role == 4) {
+            $user = UserManajemen::where('user_id',auth()->user()->id)
+                                    ->where('status',1)
+                                    ->first();
+            $owner = Merchant::where('owner_id',auth()->user()->id)->first();
+
+            $outlet_id = $user->outlet_id;
+
+            $pendaptaan = Order::select('order.number','customer.name as customer','order.date_pay as date',
+                            DB::raw("SUM(order.grand_total) as nominal"))
+                            ->groupBy('order.number','customer.name','order.date_pay')
+                            ->leftJoin('customer', 'customer.id', '=', 'order.customer_id')
+                            ->where(function ($query) use ($owner,$outlet_id) {
+                                if (auth()->user()->role==2 ){
+                                    $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                    $query->whereIn('order.outlet_id',$outlet);
+                                }else{
+                                    $query->where('order.outlet_id',$outlet_id);
+                                }
+                            })
+                            ->where('order.status_payment',1)
+                            ->where('order.status_order','<>',4)
+                            ->whereDate('order.date_pay', '>=', date('Y-m-d'))
+                            ->whereDate('order.date_pay', '<=', date('Y-m-d'))
+                            ->get();
+            $customer = Customer::orderBy('id','desc')
+                            ->where(function ($query) use ($owner,$outlet_id) {
+                                if (auth()->user()->role==2 ){
+                                    $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                    $query->whereIn('outlet_id',$outlet);
+                                }else{
+                                    $query->where('outlet_id',$outlet_id);
+                                }
+                            })
+                            ->get()->count();
+
+            $outl = Outlet::orderBy('id','desc')
+                            ->where(function ($query) use ($owner,$outlet_id) {
+                                if (auth()->user()->role==2 ){
+                                    $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                    $query->whereIn('id',$outlet);
+                                }else{
+                                    $query->where('id',$outlet_id);
+                                }
+                            })
+                            ->get()->count();
+
+            $pengeluaran = Expenditure::select('expenditure_category.name',
+                                DB::raw("SUM(expenditure.cost) as nominal"))
+                                ->groupBy('expenditure_category.name')
+                                ->leftJoin('expenditure_category', 'expenditure_category.id', '=', 'expenditure.expenditure_category_id')
+                                ->where(function ($query) use ($owner,$outlet_id) {
+                                    if (auth()->user()->role==2 ){
+                                        $outlet = Outlet::select('id')->where('merchant_id',$owner->id)->get()->toArray();
+                                        $query->whereIn('expenditure.outlet_id',$outlet);        
+                                    }else{
+                                        $query->where('expenditure.outlet_id',$outlet_id);
+                                    }
+                                })
+                                 ->whereDate('expenditure.date', '>=', date('Y-m-d'))
+                                 ->whereDate('expenditure.date', '<=', date('Y-m-d'))
+                                ->get();
+
+
+            $totalPendapatan = $pendaptaan->sum('nominal');
+            $totalPelanggan = $customer;
+            $totalOutlet = $outl;
+            $totalPengeluaran = $pengeluaran->sum('nominal');
+            return view('dashboard.outlet',compact('totalPendapatan','totalPelanggan','totalOutlet','totalPengeluaran'));
         }
-        return view('dashboard.admin',compact('totalBerlangganan','totalUser','totalOutlet','totalBelumBerlangganan'));
+        return view('dashboard.super',compact('totalBerlangganan','totalUser','totalOutlet','totalBelumBerlangganan'));
     }
 }

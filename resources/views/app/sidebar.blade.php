@@ -34,8 +34,8 @@
                             </ul>
                         </li>
                     @else 
-                    <li class="{{ (request()->segment(1) == 'pesanan' ) ? 'active' : '' }} ">
-                        <a href="{{Route('dashboard')}}"><i class="ti-blackboard"></i>Pesanan </a> </li>
+                    <li class="{{ (request()->segment(1) == 'purchase' ) ? 'active' : '' }} ">
+                        <a href="{{Route('purchase')}}"><i class="ti-blackboard"></i>History Langganan </a> </li>
 
                         @if (auth()->user()->role==2||auth()->user()->role==3)
                         <li class="{{ (request()->segment(1) == 'outlet' ) ? 'active' : '' }} ">

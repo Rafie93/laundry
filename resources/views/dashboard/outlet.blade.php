@@ -33,8 +33,8 @@
                                         <i class="fas fa-bullseye"></i>
                                     </div>
                                     <div class="stat-content">
-                                        <div class="stat-text">Total Berlangganan </div>
-                                        <div class="stat-digit"> {{$totalBerlangganan}}</div>
+                                        <div class="stat-text">Pendapatan Hari Ini </div>
+                                        <div class="stat-digit"> Rp. {{number_format($totalPendapatan)}}</div>
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%;"></div>
@@ -50,8 +50,8 @@
                                         <i class="fas fa-credit-card"></i>
                                     </div>
                                     <div class="stat-content">
-                                        <div class="stat-text">Total Free</div>
-                                        <div class="stat-digit"> {{$totalBelumBerlangganan}}</div>
+                                        <div class="stat-text">Total Pelanggan</div>
+                                        <div class="stat-digit"> {{$totalPelanggan}}</div>
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" style="width: 78%;"></div>
@@ -84,8 +84,8 @@
                                         <i class="fas fa-users"></i>
                                     </div>
                                     <div class="stat-content">
-                                        <div class="stat-text">Total User App</div>
-                                        <div class="stat-digit"> {{$totalUser}}</div>
+                                        <div class="stat-text">Pengeluaran Hari Ini</div>
+                                        <div class="stat-digit"> {{number_format($totalPengeluaran)}}</div>
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: 65%;"></div>
@@ -96,7 +96,7 @@
                         <!-- /# column -->
                     </div>
                     <!-- /# row -->
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-lg-6">
                             <div class="card alert">
                                 <div class="card-header">
@@ -131,7 +131,7 @@
                             </div>
                         </div> 
                         <!-- /# column -->
-                    </div>
+                    </div> --}}
                     <!-- /# row -->
                                      
                  <!-- /# card -->

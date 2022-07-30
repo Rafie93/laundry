@@ -11,6 +11,11 @@ class SubscribeController extends Controller
     public function index(Request $request)
     {
         $subscribes = Subscribe::orderBy('created_at','desc')
+                                ->where(function ($query) {
+                                    if (!auth()->user()->isSuperAdmin() ){
+                                        $query->where('user_id','=', auth()->user()->id);
+                                    }
+                                }) 
                                 ->paginate(20);
         return view('subscription.index', compact('subscribes'));
     }
